@@ -51,9 +51,7 @@ public class RaycastDistanceHandler : MonoBehaviour
 
     void CalculateDistance()
     {
-        Debug.Log("distance points: " + point1 + " | " + point2);
         var distance = Vector3.Distance(point1, point2);
-        Debug.Log("Distance = " + distance.ToString());
         measurementText.SetText(distance.ToString());
     }
 
@@ -62,7 +60,8 @@ public class RaycastDistanceHandler : MonoBehaviour
     bool getXRInputPress()
     {
         bool value;
-        return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value) && value;
+        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.gripButton, out value);
+        return pressed && value;
     }
 
     void handleMeasurement()
