@@ -31,11 +31,19 @@ public class RaycastDistanceHandler : MonoBehaviour
     private bool measurementStarted = false;
     private bool shouldResetPoints = false;
 
-    void handleCast()
+    void GetDistance()
     {
         RaycastHit ray;
         controllerRaycast.GetCurrentRaycastHit(out ray);
-        playerDistanceText.SetText(ray.distance.ToString());
+        float distance = ray.distance;
+        if (distance == 0)
+        {
+            playerDistanceText.SetText("No target");
+        }
+        else 
+        {
+        playerDistanceText.SetText(ray.distance.ToString("#.00") + "m");
+        }
     }
 
 
@@ -48,19 +56,17 @@ public class RaycastDistanceHandler : MonoBehaviour
         }
     }
 
-
     void CalculateDistance()
     {
         var distance = Vector3.Distance(point1, point2);
         measurementText.SetText("Distance: " + distance.ToString());
     }
 
-
-
     bool getXRInputPress()
     {
         bool value;
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.gripButton, out value);
+        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value);
+        Debug.Log("PRESSED!");
         return pressed && value;
     }
 
@@ -93,17 +99,9 @@ public class RaycastDistanceHandler : MonoBehaviour
         }
     }
 
-
-    void Start()
-    {
-        handleCast();
-    }
-
     void Update()
     {
-        handleCast();
-
+        GetDistance();
         handleMeasurement();
-
     }
 }
