@@ -52,7 +52,7 @@ public class RaycastDistanceHandler : MonoBehaviour
     void CalculateDistance()
     {
         var distance = Vector3.Distance(point1, point2);
-        measurementText.SetText(distance.ToString());
+        measurementText.SetText("Distance: " + distance.ToString());
     }
 
 
@@ -75,12 +75,12 @@ public class RaycastDistanceHandler : MonoBehaviour
             if (!measurementStarted)
             {
                 point1 = rayhit.point;
-                point1Text.SetText(point1.ToString());
+                point1Text.SetText("Point 1: " + point1.ToString());
             }
             else
             {
                 point2 = rayhit.point;
-                point2Text.SetText(point2.ToString());
+                point2Text.SetText("Point 2: " + point2.ToString());
             }
 
             if (measurementStarted)
