@@ -60,7 +60,7 @@ public class RaycastDistanceHandler : MonoBehaviour
     bool getXRInputPress()
     {
         bool value;
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.gripButton, out value);
+        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value);
         return pressed && value;
     }
 
