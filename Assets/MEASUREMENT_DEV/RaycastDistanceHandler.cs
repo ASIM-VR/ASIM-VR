@@ -15,10 +15,12 @@ public class RaycastDistanceHandler : MonoBehaviour
     private TextMeshProUGUI point1Text;
     [SerializeField]
     private TextMeshProUGUI point2Text;
-
+    
     [SerializeField]
     private TextMeshProUGUI measurementText;
 
+    [SerializeField]
+    private LineDrawer drawer;
 
     [SerializeField]
     private XRRayInteractor controllerRaycast;
@@ -42,7 +44,7 @@ public class RaycastDistanceHandler : MonoBehaviour
         }
         else 
         {
-        playerDistanceText.SetText(ray.distance.ToString("#.00") + "m");
+            playerDistanceText.SetText(ray.distance.ToString("#.00") + "m");
         }
     }
 
@@ -54,6 +56,10 @@ public class RaycastDistanceHandler : MonoBehaviour
             point1 = new Vector3();
             point2 = new Vector3();
         }
+        drawer.ResetLine();
+        measurementStarted = false;
+        drawer.enabled = false;
+
     }
 
     void CalculateDistance()
@@ -73,13 +79,13 @@ public class RaycastDistanceHandler : MonoBehaviour
     void handleMeasurement()
     {
         if (Input.GetMouseButtonDown(0) || getXRInputPress())
-        {
-            resetPoints();
+        {   
             RaycastHit rayhit;
             controllerRaycast.GetCurrentRaycastHit(out rayhit);
 
             if (!measurementStarted)
-            {
+            {   
+                drawer.enabled = true;
                 point1 = rayhit.point;
                 point1Text.SetText("Point 1: " + point1.ToString());
             }
@@ -92,10 +98,14 @@ public class RaycastDistanceHandler : MonoBehaviour
             if (measurementStarted)
             {
                 shouldResetPoints = true;
+                drawer.DrawLine(point1, point2);
                 CalculateDistance();
             }
 
             measurementStarted = !measurementStarted;
+        } else if (Input.GetMouseButtonDown(1))
+        {   
+            resetPoints();
         }
     }
 
