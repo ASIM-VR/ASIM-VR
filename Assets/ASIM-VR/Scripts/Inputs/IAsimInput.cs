@@ -9,14 +9,6 @@ namespace AsimVr.Inputs
     public interface IAsimInput
     {
         /// <summary>
-        /// Get raycast hit from the given hand.
-        /// </summary>
-        /// <param name="hand">Target hand.</param>
-        /// <param name="hit">Current raycast hit.</param>
-        /// <returns>Is the raycast hit valid.</returns>
-        bool GetRay(AsimHand hand, out RaycastHit hit);
-
-        /// <summary>
         /// Returns true on the first frame the input is active.
         /// </summary>
         /// <param name="input">Input button.</param>
@@ -36,6 +28,13 @@ namespace AsimVr.Inputs
         /// <param name="input">Input button.</param>
         /// <returns>Is input deactivated on the current frame..</returns>
         bool GetButtonUp(AsimButton input);
+
+        /// <summary>
+        /// Check if any trigger is in the given state and invoke the given action.
+        /// </summary>
+        /// <param name="state">Trigger state.</param>
+        /// <param name="action">Action to invoke.</param>
+        void UpdateTrigger(AsimTrigger trigger, AsimState state, AsimInput.TriggerAction action);
 
         /// <summary>
         /// Current scroll delta.

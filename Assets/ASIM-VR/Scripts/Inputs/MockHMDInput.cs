@@ -13,22 +13,21 @@ namespace AsimVr.Inputs
         private readonly XRRayInteractor m_rightHand;
         private readonly XRRayInteractor m_leftHand;
 
+        private readonly XRController m_rightController;
+        private readonly XRController m_leftController;
+
         public MockHMDInput(XRRayInteractor right, XRRayInteractor left)
         {
             m_rightHand = right;
+            m_rightController = right.GetComponent<XRController>();
             m_leftHand = left;
+            m_leftController = left.GetComponent<XRController>();
         }
 
         public bool GetButton(AsimButton input)
         {
             switch(input)
             {
-                case AsimButton.RightTrigger:
-                    return Input.GetMouseButton(0);
-
-                case AsimButton.LeftTrigger:
-                    return Input.GetMouseButton(1);
-
                 default:
                     return false;
             }
@@ -38,12 +37,6 @@ namespace AsimVr.Inputs
         {
             switch(input)
             {
-                case AsimButton.RightTrigger:
-                    return Input.GetMouseButtonDown(0);
-
-                case AsimButton.LeftTrigger:
-                    return Input.GetMouseButtonDown(1);
-
                 default:
                     return false;
             }
@@ -53,35 +46,41 @@ namespace AsimVr.Inputs
         {
             switch(input)
             {
-                case AsimButton.RightTrigger:
-                    return Input.GetMouseButtonUp(0);
-
-                case AsimButton.LeftTrigger:
-                    return Input.GetMouseButtonUp(1);
-
                 default:
                     return false;
             }
         }
 
-        public bool GetRay(AsimHand hand, out RaycastHit hit)
-        {
-            switch(hand)
-            {
-                case AsimHand.Right:
-                    return m_rightHand.GetCurrentRaycastHit(out hit);
-
-                case AsimHand.Left:
-                    return m_leftHand.GetCurrentRaycastHit(out hit);
-            }
-
-            hit = default;
-            return false;
-        }
-
         public Vector2 GetScroll()
         {
             return new Vector2(Input.mouseScrollDelta.x, Input.mouseScrollDelta.y);
+        }
+
+        public void UpdateTrigger(AsimTrigger trigger, AsimState state, AsimInput.TriggerAction action)
+        {
+            switch(state)
+            {
+                case AsimState.Down:
+                    if(Input.GetMouseButtonDown(0))
+                        action?.Invoke(m_rightController, m_rightHand);
+                    if(Input.GetMouseButtonDown(1))
+                        action?.Invoke(m_leftController, m_leftHand);
+                    break;
+
+                case AsimState.Hold:
+                    if(Input.GetMouseButton(0))
+                        action?.Invoke(m_rightController, m_rightHand);
+                    if(Input.GetMouseButton(1))
+                        action?.Invoke(m_leftController, m_leftHand);
+                    break;
+
+                case AsimState.Up:
+                    if(Input.GetMouseButtonUp(0))
+                        action?.Invoke(m_rightController, m_rightHand);
+                    if(Input.GetMouseButtonUp(1))
+                        action?.Invoke(m_leftController, m_leftHand);
+                    break;
+            }
         }
     }
 }

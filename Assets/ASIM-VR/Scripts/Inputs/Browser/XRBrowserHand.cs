@@ -1,7 +1,7 @@
 ﻿using AsimVr.Inputs;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 using ZenFulcrum.EmbeddedBrowser;
 using ZenFulcrum.EmbeddedBrowser.VR;
 
@@ -13,19 +13,31 @@ namespace AsimVr.Demo
     /// </summary>
     public class XRBrowserHand : VRBrowserHand
     {
+        /// <summary>
+        /// Binding flags for finding private properties in the base class.
+        /// </summary>
         private const BindingFlags Flags = BindingFlags.Instance
                                          | BindingFlags.Public
                                          | BindingFlags.NonPublic;
 
+        /// <summary>
+        /// Property info for <see cref="VRBrowserHand.DepressedButtons"/>.
+        /// </summary>
         private static readonly PropertyInfo depressedButtons
             = typeof(VRBrowserHand)
                 .GetProperty("DepressedButtons", Flags);
 
+        /// <summary>
+        /// Set method infor for <see cref="VRBrowserHand.Tracked"/>.
+        /// </summary>
         private static readonly MethodInfo setTracked
             = typeof(VRBrowserHand)
                 .GetProperty("Tracked", Flags)
                 .GetSetMethod(true);
 
+        /// <summary>
+        /// Set method info for <see cref="VRBrowserHand.ScrollDelta"/>.
+        /// </summary>
         private static readonly MethodInfo setScroll
             = typeof(VRBrowserHand)
                 .GetProperty("ScrollDelta", Flags)
@@ -51,41 +63,38 @@ namespace AsimVr.Demo
         new public void OnEnable()
         {
             base.OnEnable();
-            var button = hand == XRNode.LeftHand
-                ? AsimButton.LeftTrigger
-                : AsimButton.RightTrigger;
-            Input.AddListener(button, AsimState.Down, LeftClick);
+            Input.AddTriggerListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
+            Input.AddTriggerListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
         }
 
         new public void OnDisable()
         {
             base.OnDisable();
-            var button = hand == XRNode.LeftHand
-                ? AsimButton.LeftTrigger
-                : AsimButton.RightTrigger;
-            Input.AddListener(button, AsimState.Down, LeftClick);
+            Input.RemoveTriggerListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
+            Input.RemoveTriggerListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
         }
 
-        private void LeftClick()
+        private void PrimaryHold(XRController controller, XRRayInteractor interactor)
         {
-            m_buttons |= MouseButton.Left;
+            if(controller.controllerNode == hand)
+            {
+                m_buttons |= MouseButton.Left;
+            }
         }
 
-        private void RightClick()
+        private void SecondaryHold(XRController controller, XRRayInteractor interactor)
         {
-            m_buttons |= MouseButton.Right;
-        }
-
-        private void MiddleClick()
-        {
-            m_buttons |= MouseButton.Right;
+            if(controller.controllerNode == hand)
+            {
+                m_buttons |= MouseButton.Right;
+            }
         }
 
         protected override void ReadInput()
         {
             //Force VRBrowserHand.Tracking on since XRNodeState.tracked is skipped.
-            //TODO: Test in VR.
             SetTracked(true);
+            //TODO: Test in VR.
             SetDepressedButtons(m_buttons);
             SetScroll(Input.GetScroll());
             m_buttons = 0;

@@ -12,10 +12,14 @@ namespace AsimVr.Inputs
         Left
     }
 
+    public enum AsimTrigger
+    {
+        Primary,
+        Secondary
+    }
+
     public enum AsimButton
     {
-        RightTrigger,
-        LeftTrigger,
         Action1,
         Action2,
         Action3,
@@ -35,6 +39,8 @@ namespace AsimVr.Inputs
     /// Use <see cref="Instance"/> to access the current instance.
     /// Use <see cref="AddListener(AsimButton, AsimState, Action)"/> to add listener for a given button and state.
     /// Use <see cref="RemoveListener(AsimButton, AsimState, Action)"/> to remove listener from a given button and state.
+    /// Use <see cref="AddTriggerListener(AsimState, TriggerAction)"/> to add listener for controller trigger.
+    /// Use <see cref="RemoveTriggerListener(AsimState, TriggerAction)"/> to remove listener from controller trigger.
     /// </summary>
     /// <example>
     /// public class InputExample : MonoBehaviour
@@ -58,6 +64,8 @@ namespace AsimVr.Inputs
     [DefaultExecutionOrder(-50)]
     public class AsimInput : MonoBehaviour
     {
+        public delegate void TriggerAction(XRController controller, XRRayInteractor interactor);
+
         [SerializeField]
         private XRRayInteractor m_rightHand;
 
@@ -69,6 +77,11 @@ namespace AsimVr.Inputs
         /// </summary>
         private Dictionary<(AsimButton button, AsimState state), Action> m_actions;
 
+        /// <summary>
+        /// Controller trigger actions.
+        /// </summary>
+        private Dictionary<(AsimTrigger trigger, AsimState state), TriggerAction> m_triggerActions;
+
         private void Awake()
         {
             if(Instance != null)
@@ -77,6 +90,7 @@ namespace AsimVr.Inputs
                 return;
             }
             m_actions = new Dictionary<(AsimButton, AsimState), Action>();
+            m_triggerActions = new Dictionary<(AsimTrigger trigger, AsimState state), TriggerAction>();
             InitializeInput();
             Instance = this;
         }
@@ -137,15 +151,27 @@ namespace AsimVr.Inputs
             }
         }
 
-        /// <summary>
-        /// Get current raycast hit from the given hand.
-        /// </summary>
-        /// <param name="hand">Target hand.</param>
-        /// <param name="hit">Current raycast hit.</param>
-        /// <returns>Is the current raycast hit valid.</returns>
-        public bool GetRay(AsimHand hand, out RaycastHit hit)
+        public void AddTriggerListener(AsimTrigger trigger, AsimState state, TriggerAction action)
         {
-            return Input.GetRay(hand, out hit);
+            var key = (trigger, state);
+            if(!m_triggerActions.ContainsKey(key))
+            {
+                m_triggerActions.Add(key, default);
+            }
+            m_triggerActions[key] += action;
+        }
+
+        public void RemoveTriggerListener(AsimTrigger trigger, AsimState state, TriggerAction action)
+        {
+            var key = (trigger, state);
+            if(m_triggerActions.ContainsKey(key))
+            {
+                m_triggerActions[key] -= action;
+                if(m_triggerActions[key] == default)
+                {
+                    m_triggerActions.Remove(key);
+                }
+            }
         }
 
         /// <summary>
@@ -159,6 +185,11 @@ namespace AsimVr.Inputs
 
         private void UpdateInput()
         {
+            foreach(var action in m_triggerActions)
+            {
+                Input.UpdateTrigger(action.Key.trigger, action.Key.state, action.Value);
+            }
+
             foreach(var action in m_actions)
             {
                 switch(action.Key.state)
@@ -202,6 +233,10 @@ namespace AsimVr.Inputs
                 case "MockHMD Display":
                     //Use mouse and keyboard controls.
                     Input = new MockHMDInput(m_rightHand, m_leftHand);
+                    break;
+
+                case "OpenVR Display":
+                    Input = new XRInput(m_rightHand, m_leftHand);
                     break;
 
                 default:
