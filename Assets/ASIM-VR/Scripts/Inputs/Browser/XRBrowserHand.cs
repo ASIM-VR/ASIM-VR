@@ -1,6 +1,7 @@
 ﻿using AsimVr.Inputs;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 using ZenFulcrum.EmbeddedBrowser;
 using ZenFulcrum.EmbeddedBrowser.VR;
@@ -63,28 +64,28 @@ namespace AsimVr.Demo
         new public void OnEnable()
         {
             base.OnEnable();
-            Input.AddTriggerListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
-            Input.AddTriggerListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
+            Input.AddListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
+            Input.AddListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
         }
 
         new public void OnDisable()
         {
             base.OnDisable();
-            Input.RemoveTriggerListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
-            Input.RemoveTriggerListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
+            Input.RemoveListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
+            Input.RemoveListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
         }
 
-        private void PrimaryHold(XRController controller, XRRayInteractor interactor)
+        private void PrimaryHold(XRNode node, XRRayInteractor interactor)
         {
-            if(controller.controllerNode == hand)
+            if(node == hand)
             {
                 m_buttons |= MouseButton.Left;
             }
         }
 
-        private void SecondaryHold(XRController controller, XRRayInteractor interactor)
+        private void SecondaryHold(XRNode node, XRRayInteractor interactor)
         {
-            if(controller.controllerNode == hand)
+            if(node == hand)
             {
                 m_buttons |= MouseButton.Right;
             }

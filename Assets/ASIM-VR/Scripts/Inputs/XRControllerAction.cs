@@ -1,5 +1,6 @@
 ﻿using AsimVr.Inputs.Core;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace AsimVr.Inputs
@@ -10,60 +11,78 @@ namespace AsimVr.Inputs
     /// </summary>
     public class XRControllerAction
     {
-        private readonly FakeState m_primaryState;
-        private readonly FakeState m_secondaryState;
-        private readonly XRController m_controller;
+        /// <summary>
+        /// Different trigger states.
+        /// </summary>
+        private readonly Dictionary<AsimTrigger, FakeState> m_triggerStates;
 
-        public XRControllerAction(XRRayInteractor ray)
+        public XRControllerAction(XRController controller)
         {
-            m_primaryState = new FakeState();
-            m_secondaryState = new FakeState();
-            Ray = ray;
-            if(!ray.TryGetComponent(out m_controller))
+            m_triggerStates = new Dictionary<AsimTrigger, FakeState>();
+            foreach(AsimTrigger trigger in Enum.GetValues(typeof(AsimTrigger)))
             {
-                Debug.LogError("Unable to find XRController!", ray.gameObject);
+                m_triggerStates.Add(trigger, new FakeState());
             }
+            Controller = controller;
+            Ray = controller.GetComponent<XRRayInteractor>();
         }
 
+        /// <summary>
+        /// Check if the given trigger is in a given state.
+        /// </summary>
+        /// <param name="trigger">Target trigger.</param>
+        /// <param name="state">Target state.</param>
+        /// <returns>Is the trigger in the given state.</returns>
         public bool IsActive(AsimTrigger trigger, AsimState state)
         {
-            return GetFakeState(trigger).GetState(state, IsPressed(trigger));
+            return m_triggerStates[trigger].GetState(state, IsPressed(trigger));
         }
 
-        private FakeState GetFakeState(AsimTrigger trigger)
-        {
-            switch(trigger)
-            {
-                case AsimTrigger.Primary:
-                    return m_primaryState;
-
-                case AsimTrigger.Secondary:
-                    return m_secondaryState;
-
-                default:
-                    return default;
-            }
-        }
-
+        /// <summary>
+        /// Get current press state for given trigger.
+        /// </summary>
+        /// <param name="trigger">Target trigger.</param>
+        /// <returns>Is trigger active.</returns>
         private bool IsPressed(AsimTrigger trigger)
         {
+            //Note: Changing input mapping for ASIM-VR should happen here.
             switch(trigger)
             {
                 case AsimTrigger.Primary:
-                    return PrimaryDown;
+                    return IsPressed(Controller.selectUsage);
 
                 case AsimTrigger.Secondary:
-                    return SecondaryDown;
+                    return IsPressed(Controller.activateUsage);
+
+                case AsimTrigger.Button1:
+                    return IsPressed(InputHelpers.Button.PrimaryButton);
+
+                case AsimTrigger.Button2:
+                    return IsPressed(InputHelpers.Button.SecondaryButton);
 
                 default:
                     return false;
             }
         }
 
-        public XRController Controller => m_controller;
-        public XRRayInteractor Ray { get; }
+        /// <summary>
+        /// Is the current button currently active.
+        /// </summary>
+        /// <param name="button">Target button.</param>
+        /// <returns>Is button active.</returns>
+        public bool IsPressed(InputHelpers.Button button)
+        {
+            return Controller.inputDevice.IsPressed(button, out var down) && down;
+        }
 
-        private bool PrimaryDown => Controller.inputDevice.IsPressed(Controller.selectUsage, out var down) && down;
-        private bool SecondaryDown => Controller.inputDevice.IsPressed(Controller.activateUsage, out var down) && down;
+        /// <summary>
+        /// Current XR controller.
+        /// </summary>
+        public XRController Controller { get; }
+
+        /// <summary>
+        /// Current XR ray interactor.
+        /// </summary>
+        public XRRayInteractor Ray { get; }
     }
 }
