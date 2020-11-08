@@ -16,6 +16,11 @@ namespace AsimVr.Inputs
         private readonly XRController m_rightController;
         private readonly XRController m_leftController;
 
+        private readonly KeyCode m_primary = KeyCode.Mouse0;
+        private readonly KeyCode m_secondary = KeyCode.Mouse1;
+        private readonly KeyCode m_button1 = KeyCode.Alpha1;
+        private readonly KeyCode m_button2 = KeyCode.Alpha2;
+
         public MockHMDInput(XRController right, XRController left)
         {
             m_rightController = right;
@@ -26,29 +31,67 @@ namespace AsimVr.Inputs
 
         public void UpdateTrigger(AsimTrigger trigger, AsimState state, TriggerAction action)
         {
+            var (controller, ray) = GetCurrent();
             switch(state)
             {
                 case AsimState.Down:
-                    if(Input.GetMouseButtonDown(0))
-                        action?.Invoke(m_rightController.controllerNode, m_rightHand);
-                    if(Input.GetMouseButtonDown(1))
-                        action?.Invoke(m_leftController.controllerNode, m_leftHand);
+                    if(GetTriggerDown(trigger))
+                        action?.Invoke(controller.controllerNode, ray);
                     break;
 
                 case AsimState.Hold:
-                    if(Input.GetMouseButton(0))
-                        action?.Invoke(m_rightController.controllerNode, m_rightHand);
-                    if(Input.GetMouseButton(1))
-                        action?.Invoke(m_leftController.controllerNode, m_leftHand);
+                    if(GetTrigger(trigger))
+                        action?.Invoke(controller.controllerNode, ray);
                     break;
 
                 case AsimState.Up:
-                    if(Input.GetMouseButtonUp(0))
-                        action?.Invoke(m_rightController.controllerNode, m_rightHand);
-                    if(Input.GetMouseButtonUp(1))
-                        action?.Invoke(m_leftController.controllerNode, m_leftHand);
+                    if(GetTriggerUp(trigger))
+                        action?.Invoke(controller.controllerNode, ray);
                     break;
             }
+        }
+
+        private bool GetTriggerDown(AsimTrigger trigger)
+        {
+            return Input.GetKeyDown(TriggerToKeyCode(trigger));
+        }
+
+        private bool GetTrigger(AsimTrigger trigger)
+        {
+            return Input.GetKey(TriggerToKeyCode(trigger));
+        }
+
+        private bool GetTriggerUp(AsimTrigger trigger)
+        {
+            return Input.GetKeyUp(TriggerToKeyCode(trigger));
+        }
+
+        private KeyCode TriggerToKeyCode(AsimTrigger trigger)
+        {
+            switch(trigger)
+            {
+                case AsimTrigger.Primary:
+                    return m_primary;
+
+                case AsimTrigger.Secondary:
+                    return m_secondary;
+
+                case AsimTrigger.Button1:
+                    return m_button1;
+
+                case AsimTrigger.Button2:
+                    return m_button2;
+            }
+            return KeyCode.None;
+        }
+
+        private (XRController controller, XRRayInteractor ray) GetCurrent()
+        {
+            if(Input.GetKey(KeyCode.LeftControl))
+            {
+                return (m_leftController, m_leftHand);
+            }
+            return (m_rightController, m_rightHand);
         }
 
         public Vector2 GetScroll()
