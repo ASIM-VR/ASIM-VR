@@ -4,9 +4,13 @@ using UnityEngine.XR.Interaction.Toolkit;
 namespace AsimVr.Inputs
 {
     /// <summary>
-    /// Provide keyboard and mouse implementation for input.
-    /// Right hand trigger is left mouse button.
-    /// Left hand trigger is right mouse button.
+    /// Provide keyboard and mouse input implementation.
+    /// By default right hand controller is used, hold left ctrl to use left hand controller.
+    /// Triggers:
+    ///     Primary:    Left mouse button
+    ///     Secondary:  Right mouse button
+    ///     Button1:    1
+    ///     Button2:    2
     /// </summary>
     public class MockHMDInput : IAsimInput
     {

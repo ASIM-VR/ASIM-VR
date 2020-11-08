@@ -7,7 +7,11 @@ namespace AsimVr.Inputs
 {
     /// <summary>
     /// Convert <see cref="InputHelpers.IsPressed"/> into Down, Hold and Up events.
-    /// Trigger button is defined by <see cref="XRController"/>.
+    /// Triggers:
+    ///     Primary:    <see cref="XRController.activateUsage"/>
+    ///     Secondary:  <see cref="XRController.selectUsage"/>
+    ///     Button1:    <see cref="InputHelpers.Button.PrimaryButton"/>
+    ///     Button2:    <see cref="InputHelpers.Button.SecondaryButton"/>
     /// </summary>
     public class XRControllerAction
     {

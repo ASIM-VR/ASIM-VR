@@ -21,9 +21,9 @@ namespace AsimVr.Inputs
     }
 
     /// <summary>
-    /// Delegate for invoking events once a trigger is active.
+    /// Input listener action delegate.
     /// </summary>
-    /// <param name="node">Trigger activator.</param>
+    /// <param name="node">Node activating the trigger.</param>
     /// <param name="interactor">Trigger activator ray interactor.</param>
     public delegate void TriggerAction(XRNode node, XRRayInteractor interactor);
 
@@ -31,20 +31,20 @@ namespace AsimVr.Inputs
     /// Custom input system for ASIM-VR aiming to provide unified input system for
     /// different components requiring input.
     /// Use <see cref="Instance"/> to access the current instance.
-    /// Use <see cref="AddTriggerListener(AsimState, TriggerAction)"/> to add listener for controller trigger.
-    /// Use <see cref="RemoveTriggerListener(AsimState, TriggerAction)"/> to remove listener from controller trigger.
+    /// Use <see cref="AddListener(AsimTrigger, AsimState, TriggerAction)"/> to add listener for controller trigger.
+    /// Use <see cref="RemoveListener(AsimTrigger, AsimState, TriggerAction)"/> to remove listener from controller trigger.
     /// </summary>
     /// <example>
     /// public class InputExample : MonoBehaviour
     /// {
     ///     private void OnEnable()
     ///     {
-    ///         AsimInput.Instance.AddListener(AsimButton.RightTrigger, AsimState.Down, HelloWorld);
+    ///         AsimInput.Instance.AddListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
     ///     }
     ///
     ///     private void OnDisable()
     ///     {
-    ///         AsimInput.Instance.RemoveListener(AsimButton.RightTrigger, AsimState.Down, HelloWorld);
+    ///         AsimInput.Instance.RemoveListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
     ///     }
     ///
     ///     private void HelloWorld()
@@ -80,7 +80,7 @@ namespace AsimVr.Inputs
                 Debug.LogError("AsimInput instance already exists!", gameObject);
                 return;
             }
-            m_action = new Dictionary<(AsimTrigger trigger, AsimState state), TriggerAction>();
+            m_action = new Dictionary<(AsimTrigger, AsimState), TriggerAction>();
             InitializeInput();
             Instance = this;
         }
@@ -92,6 +92,7 @@ namespace AsimVr.Inputs
 
         private void Reset()
         {
+            //Try to find the current left and right hand controllers.
             foreach(var ray in FindObjectsOfType<XRController>())
             {
                 if(ray.gameObject.name.Contains("RightHand"))
@@ -185,7 +186,7 @@ namespace AsimVr.Inputs
                 default:
                     //No input implementation.
                     Debug.LogError($"No input implementation for current device! ({XRSettings.loadedDeviceName})");
-                    //Quit the application, since there is no implementation and the input manager is a singleton.
+                    //Quit the application, since there is no valid input implementation and the input manager is a singleton.
 #if UNITY_EDITOR
                     UnityEditor.EditorApplication.isPlaying = false;
 #else
