@@ -47,7 +47,7 @@ namespace AsimVr.Inputs
     ///         AsimInput.Instance.RemoveListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
     ///     }
     ///
-    ///     private void HelloWorld()
+    ///     private void HelloWorld(XRNode node, XRRayInteractor interactor)
     ///     {
     ///         Debug.Log("Hello World!");
     ///     }
@@ -104,6 +104,14 @@ namespace AsimVr.Inputs
                 {
                     m_leftHand = ray;
                 }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if(this == Instance)
+            {
+                Instance = null;
             }
         }
 
