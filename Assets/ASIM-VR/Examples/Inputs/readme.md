@@ -38,3 +38,7 @@ public class InputExample : MonoBehaviour
     }
 }
 ```
+
+## Embedded Browser
+The primary goal of AsimInput is to make interaction between Embedded Browser and Unity XR possible. This is achieved by using reflections to inject values in to the original implementaion. This allows for a modification of the implementation without having to upload any part of the asset.  
+By adding [XRBrowserHand](../../Scripts/Inputs/Browser/XRBrowserHand.cs) component to XR Rig hand it can be used to interact with Embedded browser.
