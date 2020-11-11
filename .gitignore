@@ -59,3 +59,9 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+# Custom
+/[Aa]ssets/Local/
+/[Aa]ssets/ZFBrowser/
+/[Aa]ssets/ZFBrowser.meta
+/[Bb]rowserAssets/
