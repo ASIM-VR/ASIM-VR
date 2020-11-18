@@ -59,7 +59,6 @@ public class RaycastDistanceHandler : MonoBehaviour
         drawer.ResetLine();
         measurementStarted = false;
         drawer.enabled = false;
-
     }
 
     void CalculateDistance()
@@ -70,9 +69,7 @@ public class RaycastDistanceHandler : MonoBehaviour
 
     bool getXRInputPress()
     {
-        bool value;
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value);
-        Debug.Log("PRESSED!");
+        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool value);
         return pressed && value;
     }
 
@@ -93,10 +90,6 @@ public class RaycastDistanceHandler : MonoBehaviour
             {
                 point2 = rayhit.point;
                 point2Text.SetText("Point 2: " + point2.ToString());
-            }
-
-            if (measurementStarted)
-            {
                 shouldResetPoints = true;
                 drawer.DrawLine(point1, point2);
                 CalculateDistance();

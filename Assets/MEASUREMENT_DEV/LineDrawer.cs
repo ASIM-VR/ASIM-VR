@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(LineRenderer))]
 public class LineDrawer : MonoBehaviour
 {   
 
-    [SerializeField]
     private LineRenderer renderer;
 
     // Start is called before the first frame update
@@ -15,13 +15,11 @@ public class LineDrawer : MonoBehaviour
         renderer.positionCount = 2;    
     }
 
-
     public void DrawLine(Vector3 startPos, Vector3 endPos)
     {
         renderer.SetPosition(0, new Vector3(startPos.x, startPos.y, startPos.z));
         renderer.SetPosition(1, new Vector3(endPos.x, endPos.y, endPos.z));
     }
-
 
     public void ResetLine()
     {
