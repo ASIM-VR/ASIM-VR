@@ -93,16 +93,16 @@ namespace AsimVr.Inputs
         private void Reset()
         {
             //Try to find the current left and right hand controllers.
-            foreach(var ray in FindObjectsOfType<XRController>())
+            foreach(var controller in FindObjectsOfType<XRController>())
             {
-                if(ray.gameObject.name.Contains("RightHand"))
+                if(controller.controllerNode == XRNode.RightHand)
                 {
-                    m_rightHand = ray;
+                    m_rightHand = controller;
                 }
 
-                if(ray.gameObject.name.Contains("LeftHand"))
+                if(controller.controllerNode == XRNode.LeftHand)
                 {
-                    m_leftHand = ray;
+                    m_leftHand = controller;
                 }
             }
         }
@@ -174,32 +174,23 @@ namespace AsimVr.Inputs
         {
             if(m_rightHand == null || m_leftHand == null)
             {
-                Debug.LogError("Missing XRRayInteraction references!", gameObject);
+                Debug.LogError("Missing XR controller references!", gameObject);
                 return;
             }
 
             switch(XRSettings.loadedDeviceName)
             {
                 //No device or mock hmd selected.
+                //Loaded device name can be empty if the selected XR plugin fails to load.
                 case "":
                 case "MockHMD Display":
                     //Use mouse and keyboard controls.
                     Input = new MockHMDInput(m_rightHand, m_leftHand);
                     break;
 
-                case "OpenVR Display":
-                    Input = new XRInput(m_rightHand, m_leftHand);
-                    break;
-
                 default:
-                    //No input implementation.
-                    Debug.LogError($"No input implementation for current device! ({XRSettings.loadedDeviceName})");
-                    //Quit the application, since there is no valid input implementation and the input manager is a singleton.
-#if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-#else
-                    Application.Quit();
-#endif
+                    //Default to XR input implementation.
+                    Input = new XRInput(m_rightHand, m_leftHand);
                     break;
             }
         }
