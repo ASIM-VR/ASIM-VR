@@ -1064,7 +1064,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422111994}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d9890e2270061c4db5ee3b5010997fc, type: 3}
   m_Name: 
@@ -1134,7 +1134,7 @@ MonoBehaviour:
   m_RigBaseGameObject: {fileID: 422111994}
   m_CameraFloorOffsetObject: {fileID: 496804531}
   m_CameraGameObject: {fileID: 1229441797}
-  m_TrackingOriginMode: 1
+  m_TrackingOriginMode: 2
   m_TrackingSpace: 3
   m_CameraYOffset: 1.36144
 --- !u!4 &422112000
@@ -1145,7 +1145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422111994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.803, z: 0}
+  m_LocalPosition: {x: 0, y: 0.485, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 496804532}
@@ -1960,8 +1960,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1229441798}
   - component: {fileID: 1229441801}
-  - component: {fileID: 1229441800}
   - component: {fileID: 1229441799}
+  - component: {fileID: 1229441800}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2030,7 +2030,7 @@ MonoBehaviour:
   m_Device: 0
   m_PoseSource: 2
   m_PoseProviderComponent: {fileID: 0}
-  m_TrackingType: 0
+  m_TrackingType: 2
   m_UpdateType: 0
   m_UseRelativeTransform: 0
 --- !u!20 &1229441801

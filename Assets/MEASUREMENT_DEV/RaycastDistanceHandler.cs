@@ -69,17 +69,28 @@ public class RaycastDistanceHandler : MonoBehaviour
 
     bool getXRInputPress()
     {
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool value);
-        return pressed && value;
+        //bool value;
+        //bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out pressed);
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool pressed)) {
+            Debug.Log("Pressed:" + pressed.ToString());
+            return pressed;
+        }
+        return pressed;
     }
 
     void handleMeasurement()
     {
         if (Input.GetMouseButtonDown(0) || getXRInputPress())
-        {   
-            RaycastHit rayhit;
-            controllerRaycast.GetCurrentRaycastHit(out rayhit);
+        {
+            resetPoints();
+            // Returns boolean; turn into an if statement. RaycastHit exists only within if.
+            if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
+            {
 
+            }
+
+
+            // 
             if (!measurementStarted)
             {   
                 drawer.enabled = true;
@@ -90,6 +101,11 @@ public class RaycastDistanceHandler : MonoBehaviour
             {
                 point2 = rayhit.point;
                 point2Text.SetText("Point 2: " + point2.ToString());
+            }
+
+            // Redundant shit
+            if (measurementStarted)
+            {
                 shouldResetPoints = true;
                 drawer.DrawLine(point1, point2);
                 CalculateDistance();
