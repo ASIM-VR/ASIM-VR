@@ -94,8 +94,10 @@ namespace AsimVr.Demo
         protected override void ReadInput()
         {
             //Force VRBrowserHand.Tracking on since XRNodeState.tracked is skipped.
-            SetTracked(true);
+            //NOTE: If using real VR device does not change the tracked state it could
+            //      be used to enable/disable interaction with the browsers.
             //TODO: Test in VR.
+            SetTracked(true);
             SetDepressedButtons(m_buttons);
             SetScroll(Input.GetScroll());
             m_buttons = 0;
