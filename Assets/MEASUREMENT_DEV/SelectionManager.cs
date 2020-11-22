@@ -63,7 +63,8 @@ public class SelectionManager : MonoBehaviour {
 
     private void HandleGrabbing(){
 
-        if (Input.GetKeyDown ("f") && controller.GetCurrentRaycastHit (out var hit)) {
+        if (Input.GetKeyDown ("f")  ) {
+
 
             if (_selection != null) {
 
@@ -75,15 +76,18 @@ public class SelectionManager : MonoBehaviour {
                 return;
             }
 
-            _selection = hit.transform;
-            if (_selection != null && _selection.CompareTag (selectableTag)) {
+            if (controller.GetCurrentRaycastHit (out var hit))
+            {
+                _selection = hit.transform;
+                if (_selection != null && _selection.CompareTag (selectableTag)) {
 
-                _selection.GetComponent<BoxCollider> ().enabled = false;
-                _selection.GetComponent<Rigidbody> ().useGravity = false;
+                    _selection.GetComponent<BoxCollider> ().enabled = false;
+                    _selection.GetComponent<Rigidbody> ().useGravity = false;
 
-                UpdateSelectionPosition();
-                _selection.transform.parent = GameObject.Find ("RightHand Controller").transform;
-                applyMaterial(true);
+                    UpdateSelectionPosition();
+                    _selection.transform.parent = GameObject.Find ("RightHand Controller").transform;
+                    applyMaterial(true);
+                }
             }
         }
     }
