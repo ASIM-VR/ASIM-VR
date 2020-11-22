@@ -31,31 +31,28 @@ public class RaycastDistanceHandler : MonoBehaviour
     private Vector3 point1;
     private Vector3 point2;
     private bool measurementStarted = false;
-    private bool shouldResetPoints = false;
 
     void GetDistance()
     {
-        RaycastHit ray;
-        controllerRaycast.GetCurrentRaycastHit(out ray);
-        float distance = ray.distance;
-        if (distance == 0)
-        {
-            playerDistanceText.SetText("No target");
-        }
-        else 
-        {
-            playerDistanceText.SetText(ray.distance.ToString("#.00") + "m");
+        if (controllerRaycast.GetCurrentRaycastHit(out var hit)){
+
+            float distance = hit.distance;
+            if (distance == 0)
+            {
+                playerDistanceText.SetText("No target");
+            }
+            else 
+            {
+                playerDistanceText.SetText(distance.ToString("#.00") + "m");
+            }
         }
     }
 
 
-    void resetPoints()
+    void ResetPoints()
     {
-        if (shouldResetPoints)
-        {
-            point1 = new Vector3();
-            point2 = new Vector3();
-        }
+        point1 = new Vector3();
+        point2 = new Vector3();
         drawer.ResetLine();
         measurementStarted = false;
         drawer.enabled = false;
@@ -67,30 +64,26 @@ public class RaycastDistanceHandler : MonoBehaviour
         measurementText.SetText("Distance: " + distance.ToString());
     }
 
-    bool getXRInputPress()
+    bool GetXRInputPress()
     {
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool value);
-        return pressed && value;
+        return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool value) && value;
     }
 
-    void handleMeasurement()
+    void HandleMeasurement()
     {
-        if (Input.GetMouseButtonDown(0) || getXRInputPress())
+        if (Input.GetMouseButtonDown(0) || GetXRInputPress())
         {   
-            RaycastHit rayhit;
-            controllerRaycast.GetCurrentRaycastHit(out rayhit);
 
-            if (!measurementStarted)
+            if (controllerRaycast.GetCurrentRaycastHit(out var hit) && !measurementStarted)
             {   
                 drawer.enabled = true;
-                point1 = rayhit.point;
+                point1 = hit.point;
                 point1Text.SetText("Point 1: " + point1.ToString());
             }
             else
             {
-                point2 = rayhit.point;
+                point2 = hit.point;
                 point2Text.SetText("Point 2: " + point2.ToString());
-                shouldResetPoints = true;
                 drawer.DrawLine(point1, point2);
                 CalculateDistance();
             }
@@ -98,13 +91,13 @@ public class RaycastDistanceHandler : MonoBehaviour
             measurementStarted = !measurementStarted;
         } else if (Input.GetMouseButtonDown(1))
         {   
-            resetPoints();
+            ResetPoints();
         }
     }
 
     void Update()
     {
         GetDistance();
-        handleMeasurement();
+        HandleMeasurement();
     }
 }
