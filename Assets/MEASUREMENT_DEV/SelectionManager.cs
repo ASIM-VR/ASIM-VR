@@ -62,9 +62,8 @@ public class SelectionManager : MonoBehaviour {
 
 
     private void HandleGrabbing(){
-        controller.GetCurrentRaycastHit (out var ray);
 
-        if (Input.GetKeyDown ("f")) {
+        if (Input.GetKeyDown ("f") && controller.GetCurrentRaycastHit (out var hit)) {
 
             if (_selection != null) {
 
@@ -76,7 +75,7 @@ public class SelectionManager : MonoBehaviour {
                 return;
             }
 
-            _selection = ray.transform;
+            _selection = hit.transform;
             if (_selection != null && _selection.CompareTag (selectableTag)) {
 
                 _selection.GetComponent<BoxCollider> ().enabled = false;
