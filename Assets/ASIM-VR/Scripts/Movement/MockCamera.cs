@@ -4,15 +4,22 @@ namespace AsimVr.Movement
 {
     /// <summary>
     /// Simple mouse rotation for MockHMD.
+    /// Attach to Camera Offset under XR Rig.
     /// </summary>
     [MockHMDOnly]
     public class MockCamera : MonoBehaviour
     {
+        /// <summary>
+        /// Offset from the XR Rig root game object.
+        /// </summary>
+        [SerializeField]
+        private float m_eyeHeight = 1.7f;
+
         private void Awake()
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            transform.position += Vector3.up * 1.5f;
+            transform.position += Vector3.up * m_eyeHeight;
         }
 
         private void Update()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -31,7 +30,7 @@ namespace AsimVr.Inputs
 
         public Vector2 GetScroll()
         {
-            throw new NotImplementedException();
+            return Vector2.zero;
         }
     }
 }
