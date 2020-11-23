@@ -9,6 +9,7 @@ namespace AsimVr.Inputs
     /// Use <see cref="XRController"/> test methods to simulate XR input.
     /// </summary>
     [MockHMDOnly]
+    [DefaultExecutionOrder(100)]
     public class MouseXRController : MonoBehaviour
     {
         [SerializeField]

@@ -1,3 +1,6 @@
+# MouseXRController
+[MouseXRController](../../Scripts/Inputs/MouseXRController.cs) provides limited support for XR Interaction toolkit components by using XRControllers test methods. However, it **does not** trigger feature values. Right hand controller is used by default, hold left control to use left hand controller.  
+
 # AsimInput
 [AsimInput](../../Scripts/Inputs/AsimInput.cs) provides a singleton that can be used to listen for XR controller inputs.
 
@@ -41,4 +44,4 @@ public class InputExample : MonoBehaviour
 
 ## Embedded Browser
 The primary goal of AsimInput is to make interaction between Embedded Browser and Unity XR possible. This is achieved by using reflections to inject values in to the original implementaion. This allows for a modification of the implementation without having to upload any part of the asset.  
-By adding [XRBrowserHand](../../Scripts/Inputs/Browser/XRBrowserHand.cs) component to XR Rig hand it can be used to interact with Embedded browser.
+By having a AsimInput component in the scene and adding [XRBrowserHand](../../Scripts/Inputs/Browser/XRBrowserHand.cs) component to XR Rig hand it can be used to interact with Embedded browser.
