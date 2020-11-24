@@ -8,30 +8,65 @@ using UnityEngine.XR;
 
 public class RaycastDistanceHandler : MonoBehaviour
 {
-
     [SerializeField]
     private TextMeshProUGUI playerDistanceText;
     [SerializeField]
     private TextMeshProUGUI point1Text;
     [SerializeField]
     private TextMeshProUGUI point2Text;
-    
-    [SerializeField]
-    private TextMeshProUGUI measurementText;
 
     [SerializeField]
-    private LineDrawer drawer;
+    private TextMeshProUGUI measurementText;
 
     [SerializeField]
     private XRRayInteractor controllerRaycast;
 
     [SerializeField]
     private XRController controller;
+    
+    [SerializeField]
+    private LineDrawer drawer;
 
     private Vector3 point1;
     private Vector3 point2;
-    private bool measurementStarted = false;
-    private bool shouldResetPoints = false;
+
+    private bool firstPress;
+    private bool secondPress;
+    bool rightHandLastState; // Used to track button press state.
+    
+    void Start()
+    {
+        rightHandLastState = false;
+        firstPress = false;
+        secondPress = false;
+    }
+
+    private void Update()
+    {
+        GetDistance();
+
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
+        {
+            if (triggered != rightHandLastState)
+            {
+                Debug.Log("MEASURING");
+                MeasureDistance();
+
+                rightHandLastState = triggered;
+            }  
+        }
+        else if (controller.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool pressed) && pressed)
+        {
+            if (pressed != rightHandLastState)
+            {
+                Debug.Log("PRESSED");
+            }
+        }
+        else
+        {
+            rightHandLastState = false;
+        }
+    }
 
     void GetDistance()
     {
@@ -44,83 +79,53 @@ public class RaycastDistanceHandler : MonoBehaviour
         }
         else 
         {
-            playerDistanceText.SetText(ray.distance.ToString("#.00") + "m");
+            playerDistanceText.SetText(ray.distance.ToString("0.00") + "m");
         }
     }
 
 
-    void resetPoints()
+    void ResetPoints()
     {
-        if (shouldResetPoints)
-        {
-            point1 = new Vector3();
-            point2 = new Vector3();
-        }
+        point1 = Vector3.zero;
+        point2 = Vector3.zero;
+        point1Text.SetText("Point 1: " + point1.ToString());
+        point2Text.SetText("Point 2: " + point2.ToString());
+        measurementText.SetText("Distance: ");
         drawer.ResetLine();
-        measurementStarted = false;
         drawer.enabled = false;
     }
 
     void CalculateDistance()
     {
         var distance = Vector3.Distance(point1, point2);
-        measurementText.SetText("Distance: " + distance.ToString());
+        measurementText.SetText("Distance: " + distance.ToString("0.00") + "m");
     }
 
-    bool getXRInputPress()
+    void MeasureDistance()
     {
-        //bool value;
-        //bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out pressed);
-        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool pressed)) {
-            Debug.Log("Pressed:" + pressed.ToString());
-            return pressed;
-        }
-        return pressed;
-    }
-
-    void handleMeasurement()
-    {
-        if (Input.GetMouseButtonDown(0) || getXRInputPress())
+        // Returns boolean; turn into an if statement. RaycastHit exists only within if.
+        if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
         {
-            resetPoints();
-            // Returns boolean; turn into an if statement. RaycastHit exists only within if.
-            if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
+            if (!firstPress && !secondPress)
             {
-
-            }
-
-
-            // 
-            if (!measurementStarted)
-            {   
-                drawer.enabled = true;
                 point1 = rayhit.point;
                 point1Text.SetText("Point 1: " + point1.ToString());
+                firstPress = true;
             }
-            else
+            else if (firstPress && !secondPress)
             {
                 point2 = rayhit.point;
                 point2Text.SetText("Point 2: " + point2.ToString());
-            }
-
-            // Redundant shit
-            if (measurementStarted)
-            {
-                shouldResetPoints = true;
-                drawer.DrawLine(point1, point2);
                 CalculateDistance();
+                secondPress = true;
             }
-
-            measurementStarted = !measurementStarted;
-        } else if (Input.GetMouseButtonDown(1))
-        {   
-            resetPoints();
+            else if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
+            {
+                Debug.Log("RESETTING");
+                ResetPoints();
+                firstPress = false;
+                secondPress = false;
+            }
         }
-    }
-
-    void Update()
-    {
-        GetDistance();
-        handleMeasurement();
     }
 }

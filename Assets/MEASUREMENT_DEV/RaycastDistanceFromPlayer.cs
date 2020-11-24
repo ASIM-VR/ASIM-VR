@@ -12,7 +12,8 @@ public class RaycastDistanceFromPlayer : MonoBehaviour
     private TextMeshProUGUI distanceText;
 
     [SerializeField]
-    private XRRayInteractor controller;
+    private XRRayInteractor rayInteractor;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,7 +29,7 @@ public class RaycastDistanceFromPlayer : MonoBehaviour
     void GetDistance()
     {
         RaycastHit ray;
-        controller.GetCurrentRaycastHit(out ray);
+        rayInteractor.GetCurrentRaycastHit(out ray);
         float distance = ray.distance;
         if (distance == 0)
         {
