@@ -6,8 +6,10 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
-public class RaycastDistanceHandler : MonoBehaviour
+public class RaycastDistanceHandler : Tool
 {
+    public override AsimTool Type => AsimTool.TapeMeasure;
+
     [SerializeField]
     private TextMeshProUGUI playerDistanceText;
     [SerializeField]

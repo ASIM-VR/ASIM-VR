@@ -6,9 +6,10 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
-public class DisplayAdd : MonoBehaviour
+public class DisplayAdd : Tool
 {
-    
+    public override AsimTool Type => AsimTool.AddRemove;
+
     [SerializeField]
     private Destroy display;
     

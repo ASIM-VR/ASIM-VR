@@ -9,6 +9,9 @@ public enum AsimTool
     //Lisää tähän kaikki työkalut
     None,
     ToolPlaceholder,
+    AddRemove,
+    ObjectSize,
+    TapeMeasure
 }
 
 
@@ -52,7 +55,11 @@ public class ToolManager : MonoBehaviour
         // Temporary test functionality
         if (Input.GetKeyDown("1"))
         {
-            ActivateToolPlaceholder();
+            ActivateAddRemove();
+        }
+        else if(Input.GetKeyDown("2"))
+        {
+            ActivateObjectSize();
         }
         else if (Input.GetKeyDown("0"))
         {
@@ -66,5 +73,18 @@ public class ToolManager : MonoBehaviour
         ActivateTool(AsimTool.ToolPlaceholder);
     }
 
+    public void ActivateAddRemove()
+    {
+        ActivateTool(AsimTool.AddRemove);
+    }
 
+    public void ActivateTapeMeasure()
+    {
+        ActivateTool(AsimTool.TapeMeasure);
+    }
+
+    public void ActivateObjectSize()
+    {
+        ActivateTool(AsimTool.ObjectSize);
+    }
 }

@@ -5,8 +5,10 @@ using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
-public class GameObjectSize : MonoBehaviour
+public class GameObjectSize : Tool
 {
+    public override AsimTool Type => AsimTool.ObjectSize;
+
     //Three variables that contain the scale (size) of an object
     [SerializeField]
     private TextMeshProUGUI widthText;
@@ -35,9 +37,6 @@ public class GameObjectSize : MonoBehaviour
 
     //holds x,y and z which are measures of object
     private Vector3 objectSize;
-
-
-
 
     bool getXRInputPress() 
     {
