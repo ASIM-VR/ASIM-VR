@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace AsimVr.Inputs.Examples
@@ -8,15 +7,15 @@ namespace AsimVr.Inputs.Examples
     {
         private void OnEnable()
         {
-            AsimInput.Instance.AddListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
+            AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
         }
 
         private void OnDisable()
         {
-            AsimInput.Instance.RemoveListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
+            AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
         }
 
-        private void HelloWorld(XRNode node, XRRayInteractor interactor)
+        private void HelloWorld(XRController controller, XRRayInteractor interactor)
         {
             Debug.Log("Hello World!");
         }

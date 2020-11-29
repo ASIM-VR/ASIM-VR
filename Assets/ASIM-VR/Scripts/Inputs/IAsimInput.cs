@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace AsimVr.Inputs
+﻿namespace AsimVr.Inputs
 {
     /// <summary>
     /// Interface for implementing input.
@@ -13,12 +11,6 @@ namespace AsimVr.Inputs
         /// </summary>
         /// <param name="state">Trigger state.</param>
         /// <param name="action">Action to invoke.</param>
-        void UpdateTrigger(AsimTrigger trigger, AsimState state, TriggerAction action);
-
-        /// <summary>
-        /// Current scroll delta.
-        /// </summary>
-        /// <returns>Current scroll delta.</returns>
-        Vector2 GetScroll();
+        void UpdateTrigger(InputHelpers.Button button, AsimState state, TriggerAction action);
     }
 }

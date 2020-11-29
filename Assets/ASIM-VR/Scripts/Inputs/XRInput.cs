@@ -17,13 +17,13 @@ namespace AsimVr.Inputs
             }
         }
 
-        public void UpdateTrigger(AsimTrigger trigger, AsimState state, TriggerAction action)
+        public void UpdateTrigger(InputHelpers.Button button, AsimState state, TriggerAction action)
         {
             foreach(var controller in m_controllers)
             {
-                if(controller.IsActive(trigger, state))
+                if(controller.IsActive(button, state))
                 {
-                    action.Invoke(controller.Controller.controllerNode, controller.Ray);
+                    action.Invoke(controller.Controller, controller.Ray);
                 }
             }
         }

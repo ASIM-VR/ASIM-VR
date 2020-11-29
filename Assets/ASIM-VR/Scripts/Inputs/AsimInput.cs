@@ -5,14 +5,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 namespace AsimVr.Inputs
 {
-    public enum AsimTrigger
-    {
-        Primary,
-        Secondary,
-        Button1,
-        Button2
-    }
-
     public enum AsimState
     {
         Down,
@@ -25,26 +17,26 @@ namespace AsimVr.Inputs
     /// </summary>
     /// <param name="node">Node activating the trigger.</param>
     /// <param name="interactor">Trigger activator ray interactor.</param>
-    public delegate void TriggerAction(XRNode node, XRRayInteractor interactor);
+    public delegate void TriggerAction(XRController controller, XRRayInteractor interactor);
 
     /// <summary>
     /// Custom input system for ASIM-VR aiming to provide unified input system for
     /// different components requiring input.
     /// Use <see cref="Instance"/> to access the current instance.
-    /// Use <see cref="AddListener(AsimTrigger, AsimState, TriggerAction)"/> to add listener for controller trigger.
-    /// Use <see cref="RemoveListener(AsimTrigger, AsimState, TriggerAction)"/> to remove listener from controller trigger.
+    /// Use <see cref="AddListener(InputHelpers.Button, AsimState, TriggerAction)"/> to add listener for controller trigger.
+    /// Use <see cref="RemoveListener(InputHelpers.Button, AsimState, TriggerAction)"/> to remove listener from controller trigger.
     /// </summary>
     /// <example>
     /// public class InputExample : MonoBehaviour
     /// {
     ///     private void OnEnable()
     ///     {
-    ///         AsimInput.Instance.AddListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
+    ///         AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
     ///     }
     ///
     ///     private void OnDisable()
     ///     {
-    ///         AsimInput.Instance.RemoveListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
+    ///         AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
     ///     }
     ///
     ///     private void HelloWorld(XRNode node, XRRayInteractor interactor)
@@ -71,7 +63,7 @@ namespace AsimVr.Inputs
         /// <summary>
         /// Controller trigger actions.
         /// </summary>
-        private Dictionary<(AsimTrigger trigger, AsimState state), TriggerAction> m_action;
+        private Dictionary<(InputHelpers.Button button, AsimState state), TriggerAction> m_action;
 
         private void Awake()
         {
@@ -80,7 +72,7 @@ namespace AsimVr.Inputs
                 Debug.LogError("AsimInput instance already exists!", gameObject);
                 return;
             }
-            m_action = new Dictionary<(AsimTrigger, AsimState), TriggerAction>();
+            m_action = new Dictionary<(InputHelpers.Button, AsimState), TriggerAction>();
             InitializeInput();
             Instance = this;
         }
@@ -118,12 +110,12 @@ namespace AsimVr.Inputs
         /// <summary>
         /// Add given action to given trigger and trigger state.
         /// </summary>
-        /// <param name="trigger">Target trigger.</param>
+        /// <param name="button">Target button.</param>
         /// <param name="state">Target state.</param>
         /// <param name="action">Action to invoke.</param>
-        public void AddListener(AsimTrigger trigger, AsimState state, TriggerAction action)
+        public void AddListener(InputHelpers.Button button, AsimState state, TriggerAction action)
         {
-            var key = (trigger, state);
+            var key = (button, state);
             if(!m_action.ContainsKey(key))
             {
                 m_action.Add(key, default);
@@ -134,12 +126,12 @@ namespace AsimVr.Inputs
         /// <summary>
         /// Remove given action from given trigger and trigger state.
         /// </summary>
-        /// <param name="trigger">Target trigger.</param>
+        /// <param name="button">Target button.</param>
         /// <param name="state">Target state.</param>
         /// <param name="action">Action to remove.</param>
-        public void RemoveListener(AsimTrigger trigger, AsimState state, TriggerAction action)
+        public void RemoveListener(InputHelpers.Button button, AsimState state, TriggerAction action)
         {
-            var key = (trigger, state);
+            var key = (button, state);
             if(m_action.ContainsKey(key))
             {
                 m_action[key] -= action;
@@ -151,22 +143,13 @@ namespace AsimVr.Inputs
         }
 
         /// <summary>
-        /// Get current scroll delta.
-        /// </summary>
-        /// <returns>Scroll delta.</returns>
-        public Vector2 GetScroll()
-        {
-            return Input.GetScroll();
-        }
-
-        /// <summary>
         /// Update registered actions.
         /// </summary>
         private void UpdateInput()
         {
             foreach(var action in m_action)
             {
-                Input.UpdateTrigger(action.Key.trigger, action.Key.state, action.Value);
+                Input.UpdateTrigger(action.Key.button, action.Key.state, action.Value);
             }
         }
 
