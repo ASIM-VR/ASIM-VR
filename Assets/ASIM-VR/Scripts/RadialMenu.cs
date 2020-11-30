@@ -5,15 +5,21 @@ using UnityEngine;
 
 public class RadialMenu : MonoBehaviour
 {
-   [Header("Scene")]
-   public Transform selectionTransform = null;
-   public Transform cursorTransfom = null;
+    [Header("Scene")]
+    [SerializeField]
+    private Transform selectionTransform = null;
+    [SerializeField]
+    private Transform cursorTransfom = null;
 
     [Header("Events")]
-    public RadialSection top = null;
-    public RadialSection right = null;
-    public RadialSection bottom = null;
-    public RadialSection left = null;
+    [SerializeField]
+    private RadialSection top = null;
+    [SerializeField]
+    private RadialSection right = null;
+    [SerializeField]
+    private RadialSection bottom = null;
+    [SerializeField]
+    private RadialSection left = null;
 
     private Vector2 touchPosition = Vector2.zero;
     private List<RadialSection> radialSections = null;
@@ -41,7 +47,7 @@ public class RadialMenu : MonoBehaviour
     }
 
     private void Start()
-    {  
+    {
         Show(false);
     }
 
@@ -77,38 +83,22 @@ public class RadialMenu : MonoBehaviour
         cursorTransfom.localPosition = touchPosition;
     }
 
-    /*
-    * 
-    * 
-    */
     private void SetSelectionRotation(float newRotation)
     {
         float snappedRotation = SnapRotation(newRotation);
         selectionTransform.localEulerAngles = new Vector3(0, 0, -snappedRotation);
     }
 
-    /*
-     * 
-     * 
-     */
     private float SnapRotation(float rotation)
     {
         return GetNearestIncrement(rotation) * degreeIncrement;
     }
-    
-    /*
-     * 
-     * 
-     */
+
     private int GetNearestIncrement(float rotation)
     {
         return Mathf.RoundToInt(rotation / degreeIncrement);
     }
 
-    /*
-     * 
-     * 
-     */ 
     private void SetSelectedEvent(float currentRotation)
     {
         int index = GetNearestIncrement(currentRotation);
@@ -118,7 +108,6 @@ public class RadialMenu : MonoBehaviour
 
         highlightedSection = radialSections[index];
     }
-
 
     //InputManager -> radialMenu.SetTouchPosition(axis)
     public void SetTouchPosition(Vector2 newValue)
