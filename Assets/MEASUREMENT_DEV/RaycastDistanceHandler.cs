@@ -25,7 +25,7 @@ public class RaycastDistanceHandler : MonoBehaviour
     private XRController controller;
     
     [SerializeField]
-    private LineDrawer drawer;
+    private LineDrawer lineDrawer;
 
     private Vector3 point1;
     private Vector3 point2;
@@ -49,7 +49,7 @@ public class RaycastDistanceHandler : MonoBehaviour
         {
             if (triggered != rightHandLastState)
             {
-                Debug.Log("MEASURING");
+                Debug.Log("RaycastDistanceHandler: Measuring Distance");
                 MeasureDistance();
 
                 rightHandLastState = triggered;
@@ -59,7 +59,7 @@ public class RaycastDistanceHandler : MonoBehaviour
         {
             if (pressed != rightHandLastState)
             {
-                Debug.Log("PRESSED");
+                Debug.Log("RaycastDistanceHandler: primaryButton pressed");
             }
         }
         else
@@ -91,8 +91,8 @@ public class RaycastDistanceHandler : MonoBehaviour
         point1Text.SetText("Point 1: " + point1.ToString());
         point2Text.SetText("Point 2: " + point2.ToString());
         measurementText.SetText("Distance: ");
-        drawer.ResetLine();
-        drawer.enabled = false;
+        lineDrawer.ResetLine();
+        lineDrawer.enabled = false;
     }
 
     void CalculateDistance()
@@ -118,10 +118,11 @@ public class RaycastDistanceHandler : MonoBehaviour
                 point2Text.SetText("Point 2: " + point2.ToString());
                 CalculateDistance();
                 secondPress = true;
+                lineDrawer.DrawLine(point1, point2);
             }
             else if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
             {
-                Debug.Log("RESETTING");
+                Debug.Log("RaycastDistanceHandler: resetting");
                 ResetPoints();
                 firstPress = false;
                 secondPress = false;
