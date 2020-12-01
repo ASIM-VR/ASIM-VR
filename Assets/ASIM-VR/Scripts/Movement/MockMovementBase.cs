@@ -8,12 +8,6 @@ namespace AsimVr.Movement
     /// </summary>
     public abstract class MockMovementBase : MonoBehaviour
     {
-        protected virtual void Awake()
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
         protected virtual void Update()
         {
             UpdateCursorLockMode();
