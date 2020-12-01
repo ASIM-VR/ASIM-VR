@@ -24,7 +24,7 @@ namespace AsimVr.Movement
 
         private float Vertical => Input.GetAxis("Vertical") * m_speed;
         private float Horizontal => Input.GetAxis("Horizontal") * m_speed;
-        private float Up => Input.GetKey(KeyCode.Space) ? 1 : 0;
-        private float Down => Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) ? -1 : 0;
+        private float Up => Input.GetKey(KeyCode.Space) ? m_speed : 0;
+        private float Down => Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) ? -m_speed : 0;
     }
 }
