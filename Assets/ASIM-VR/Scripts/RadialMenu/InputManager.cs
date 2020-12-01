@@ -5,14 +5,8 @@ using UnityEngine.XR;
 using UnityEngine.Events;
 using System.Linq;
 
-[System.Serializable]
 public class InputManager : MonoBehaviour
 {
-    [Header("Actions")]
-    private bool touch;
-    private bool press;
-    private Vector2 touchPosition = Vector2.zero;
-
     [Header("Scene objects")]
     public RadialMenu radialMenu = null;
 
@@ -22,17 +16,17 @@ public class InputManager : MonoBehaviour
     private List<InputDevice> devices = new List<InputDevice>();
 
     private InputDevice device;
-    
+
     //Get device
-    void GetDevice()
+    private void GetDevice()
     {
         InputDevices.GetDevicesAtXRNode(xrNode, devices);
-        device = devices.FirstOrDefault(); //Linq?
+        device = devices.FirstOrDefault();
     }
-    
+
     private void OnEnable()
     {
-        if(!device.isValid)
+        if (!device.isValid)
         {
             GetDevice();
         }
@@ -45,7 +39,7 @@ public class InputManager : MonoBehaviour
         {
             GetDevice();
         }
-        
+
         /*
          * If you wan to get a list of connected device's inputs, comment thís out.
          * 
@@ -59,33 +53,18 @@ public class InputManager : MonoBehaviour
         */
 
         //Get boolean type input when joystick/touchpad is touched and activate radial menu 
-        InputFeatureUsage<bool> primary2DAxisTouchUsage = CommonUsages.primary2DAxisTouch;
-        if (device.TryGetFeatureValue(primary2DAxisTouchUsage, out touch) && touch)
-        {
-            //Debug.Log("primary2DAxisTouch:" + touch);
-            radialMenu.Show(touch);
-            
-        }
-        else
-        {
-            touch = false;
-            radialMenu.Show(touch);
-        }
+        radialMenu.Show(device.TryGetFeatureValue(CommonUsages.primary2DAxisTouch, out bool touch) && touch);
 
         //Get boolean type input when joystick/touchpad is pressed and activate specific radial section 
         InputFeatureUsage<bool> primary2DAxisClickUsage = CommonUsages.primary2DAxisClick;
-        if (device.TryGetFeatureValue(primary2DAxisClickUsage, out press) && press)
+        if (device.TryGetFeatureValue(primary2DAxisClickUsage, out bool press) && press)
         {
             radialMenu.ActivateHighlithedSection();
-        }
-        else
-        {
-            press = false;
         }
 
         //Get Vector2 type input from joystick/touchpad when its moved and move cursor on the radial menu
         InputFeatureUsage<Vector2> primary2DAxisUsage = CommonUsages.primary2DAxis;
-        if(device.TryGetFeatureValue(primary2DAxisUsage, out touchPosition) && touchPosition != Vector2.zero)
+        if (device.TryGetFeatureValue(primary2DAxisUsage, out Vector2 touchPosition) && touchPosition != Vector2.zero)
         {
             radialMenu.SetTouchPosition(touchPosition);
             //Debug.Log("Primary2DAxisValue:" + primary2DAxisValue);
