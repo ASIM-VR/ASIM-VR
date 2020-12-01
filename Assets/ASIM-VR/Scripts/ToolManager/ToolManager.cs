@@ -57,9 +57,13 @@ public class ToolManager : MonoBehaviour
         {
             ActivateAddRemove();
         }
-        else if(Input.GetKeyDown("2"))
+        else if (Input.GetKeyDown("2"))
         {
             ActivateObjectSize();
+        }
+        else if (Input.GetKeyDown("3"))
+        {
+            ActivateTapeMeasure();
         }
         else if (Input.GetKeyDown("0"))
         {
