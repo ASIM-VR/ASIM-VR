@@ -6,10 +6,8 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
-public class RaycastDistanceHandler : Tool
+public class RaycastDistanceHandler : MonoBehaviour
 {
-    public override AsimTool Type => AsimTool.TapeMeasure;
-
     [SerializeField]
     private TextMeshProUGUI playerDistanceText;
     [SerializeField]
@@ -27,7 +25,7 @@ public class RaycastDistanceHandler : Tool
     private XRController controller;
     
     [SerializeField]
-    private LineDrawer drawer;
+    private LineDrawer lineDrawer;
 
     private Vector3 point1;
     private Vector3 point2;
@@ -51,7 +49,7 @@ public class RaycastDistanceHandler : Tool
         {
             if (triggered != rightHandLastState)
             {
-                Debug.Log("MEASURING");
+                Debug.Log("RaycastDistanceHandler: Measuring Distance");
                 MeasureDistance();
 
                 rightHandLastState = triggered;
@@ -61,7 +59,7 @@ public class RaycastDistanceHandler : Tool
         {
             if (pressed != rightHandLastState)
             {
-                Debug.Log("PRESSED");
+                Debug.Log("RaycastDistanceHandler: primaryButton pressed");
             }
         }
         else
@@ -93,8 +91,8 @@ public class RaycastDistanceHandler : Tool
         point1Text.SetText("Point 1: " + point1.ToString());
         point2Text.SetText("Point 2: " + point2.ToString());
         measurementText.SetText("Distance: ");
-        drawer.ResetLine();
-        drawer.enabled = false;
+        lineDrawer.ResetLine();
+        lineDrawer.enabled = false;
     }
 
     void CalculateDistance()
@@ -120,10 +118,11 @@ public class RaycastDistanceHandler : Tool
                 point2Text.SetText("Point 2: " + point2.ToString());
                 CalculateDistance();
                 secondPress = true;
+                lineDrawer.DrawLine(point1, point2);
             }
             else if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
             {
-                Debug.Log("RESETTING");
+                Debug.Log("RaycastDistanceHandler: resetting");
                 ResetPoints();
                 firstPress = false;
                 secondPress = false;
