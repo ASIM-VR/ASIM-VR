@@ -7,10 +7,6 @@ using UnityEngine.XR;
 
 public class DistanceFromGround : MonoBehaviour
 {
-
-    //Contains the text that is displayed for user when screens distance from ground is calculated
-    [SerializeField]
-    private TextMeshProUGUI distanceText;
     
     //VR controller that we use to control the ray
     [SerializeField]
@@ -51,13 +47,15 @@ public class DistanceFromGround : MonoBehaviour
         //Center of the screens distance to ground
         distanceToScreenCenter = hit.transform.position.y;
 
+        Debug.Log(hit.transform.gameObject.name);
+
         //Grounds Y position
         groundPosition = GameObject.FindWithTag("Ground").transform.position.y;
 
         //Calculate how far from the ground is bottom of the screen
         distanceToGround = distanceToScreenCenter - hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y / 2 - groundPosition;
 
-        distanceText.SetText(hit.transform.gameObject.name + " is " + distanceToGround.ToString("F2") + " meters from the ground");
+        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + distanceToGround.ToString("F2") + " meters from the ground");
 
     }
 
@@ -66,8 +64,9 @@ public class DistanceFromGround : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool value)) {
-            distanceText.SetText("");
+        if(Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out var value))
+        {
+            InfoDisplay.Instance.ClearText();
         }
         ScreenDistanceFromGround();
     }
