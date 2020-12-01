@@ -6,24 +6,9 @@ using TMPro;
 public class InfoDisplay : MonoBehaviour
 {
     private TextMeshProUGUI textField;
-    private static InfoDisplay _Instance;
-    // Start is called before the first frame update
 
-    public static InfoDisplay Instance
-    {
-        get
-        {
-            return _Instance;
-        }
-        set
-        {
-            if (value != null)
-            {
-                _Instance = value;
-            }
-        }
-    }
-
+    public static InfoDisplay Instance { get; private set; }
+    
     void Awake()
     {
         if (Instance != null)
