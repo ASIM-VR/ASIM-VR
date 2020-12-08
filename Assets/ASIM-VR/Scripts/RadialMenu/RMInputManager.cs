@@ -42,6 +42,7 @@ public class RMInputManager : MonoBehaviour
            touchPosition != Vector2.zero)
         {
             RadialMenu.SetTouchPosition(touchPosition);
+            RadialMenu.ActivateHighlithedSection();
         }
     }
 
@@ -57,7 +58,7 @@ public class RMInputManager : MonoBehaviour
     {
         if(controller.controllerNode == hand)
         {
-            RadialMenu.ActivateHighlithedSection();
+            //RadialMenu.ActivateHighlithedSection();
         }
     }
 }
