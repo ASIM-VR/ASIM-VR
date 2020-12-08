@@ -7,15 +7,26 @@ public class GameObjectSize : Tool
     public override AsimTool Type => AsimTool.ObjectSize;
     public override string ToolName => "Object size calculator";
 
+    private bool showingText;
+
     private void OnEnable()
     {
+        showingText = false;
         AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
-        AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, ClearTarget);
+        //AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, ClearTarget);
     }
 
     private void FindTarget(XRController controller, XRRayInteractor interactor)
     {
-        SearchCalculableObject(interactor);
+        if (showingText == false)
+        {
+            SearchCalculableObject(interactor);
+        }
+        else if (showingText == true)
+        {
+            InfoDisplay.Instance.ClearText();
+            showingText = false;
+        }
     }
 
     private void ClearTarget(XRController controller, XRRayInteractor interactor)
@@ -32,6 +43,7 @@ public class GameObjectSize : Tool
             if(hit.transform.gameObject.CompareTag("Measurable"))
             {
                 PrintSize(hit);
+                showingText = true;
             }
         }
     }
