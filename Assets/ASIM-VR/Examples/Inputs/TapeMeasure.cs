@@ -1,6 +1,5 @@
 ﻿using TMPro;
 using UnityEngine;
-using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace AsimVr.Inputs.Examples
@@ -39,15 +38,15 @@ namespace AsimVr.Inputs.Examples
         private void OnEnable()
         {
             //Add listener for primary trigger button to set a point.
-            Input.AddListener(AsimTrigger.Primary, AsimState.Down, SetPoint);
+            Input.AddListener(InputHelpers.Button.Trigger, AsimState.Down, SetPoint);
             //Add listener for button1 to clear the current measurement.
-            Input.AddListener(AsimTrigger.Button1, AsimState.Down, Clear);
+            Input.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, Clear);
         }
 
         private void OnDisable()
         {
-            Input.RemoveListener(AsimTrigger.Primary, AsimState.Down, SetPoint);
-            Input.RemoveListener(AsimTrigger.Button1, AsimState.Down, Clear);
+            Input.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, SetPoint);
+            Input.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, Clear);
         }
 
         private void Reset()
@@ -73,7 +72,7 @@ namespace AsimVr.Inputs.Examples
             }
         }
 
-        private void SetPoint(XRNode node, XRRayInteractor interactor)
+        private void SetPoint(XRController controller, XRRayInteractor interactor)
         {
             //Only set the current point if the triggering controller is pointing at
             //a valid surface.
@@ -92,7 +91,7 @@ namespace AsimVr.Inputs.Examples
             }
         }
 
-        private void Clear(XRNode node, XRRayInteractor interactor)
+        private void Clear(XRController controller, XRRayInteractor interactor)
         {
             //You could limit the clear to a certain controller by
             //comparing the current node.

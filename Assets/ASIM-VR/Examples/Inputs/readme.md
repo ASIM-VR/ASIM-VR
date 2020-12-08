@@ -26,19 +26,19 @@ In this simple example primary trigger listener is added on enable and removed o
 public class InputExample : MonoBehaviour
 {
     private void OnEnable()
-    {
-        AsimInput.Instance.AddListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
-    }
+	{
+		AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
+	}
 
-    private void OnDisable()
-    {
-        AsimInput.Instance.RemoveListener(AsimTrigger.Primary, AsimState.Down, HelloWorld);
-    }
+	private void OnDisable()
+	{
+		AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, HelloWorld);
+	}
 
-    private void HelloWorld(XRNode node, XRRayInteractor interactor)
-    {
-        Debug.Log("Hello World!");
-    }
+	private void HelloWorld(XRController controller, XRRayInteractor interactor)
+	{
+		Debug.Log("Hello World!");
+	}
 }
 ```
 

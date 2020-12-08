@@ -49,6 +49,11 @@ namespace AsimVr.Demo
         /// </summary>
         private MouseButton m_buttons;
 
+        /// <summary>
+        /// Current scroll delta.
+        /// </summary>
+        private Vector2 m_scroll;
+
         private void Awake()
         {
             if(VRInput.Impl == null)
@@ -64,30 +69,41 @@ namespace AsimVr.Demo
         new public void OnEnable()
         {
             base.OnEnable();
-            Input.AddListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
-            Input.AddListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
+            Input.AddListener(InputHelpers.Button.Trigger, AsimState.Hold, PrimaryHold);
+            Input.AddListener(InputHelpers.Button.Grip, AsimState.Hold, SecondaryHold);
+            Input.AddListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Hold, UpdateScroll);
         }
 
         new public void OnDisable()
         {
             base.OnDisable();
-            Input.RemoveListener(AsimTrigger.Primary, AsimState.Hold, PrimaryHold);
-            Input.RemoveListener(AsimTrigger.Secondary, AsimState.Hold, SecondaryHold);
+            Input.RemoveListener(InputHelpers.Button.Trigger, AsimState.Hold, PrimaryHold);
+            Input.RemoveListener(InputHelpers.Button.Grip, AsimState.Hold, SecondaryHold);
+            Input.RemoveListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Hold, UpdateScroll);
         }
 
-        private void PrimaryHold(XRNode node, XRRayInteractor interactor)
+        private void PrimaryHold(XRController controller, XRRayInteractor interactor)
         {
-            if(node == hand)
+            if(controller.controllerNode == hand)
             {
                 m_buttons |= MouseButton.Left;
             }
         }
 
-        private void SecondaryHold(XRNode node, XRRayInteractor interactor)
+        private void SecondaryHold(XRController controller, XRRayInteractor interactor)
         {
-            if(node == hand)
+            if(controller.controllerNode == hand)
             {
                 m_buttons |= MouseButton.Right;
+            }
+        }
+
+        private void UpdateScroll(XRController controller, XRRayInteractor interactor)
+        {
+            if(controller.controllerNode == hand &&
+               controller.inputDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out var value))
+            {
+                m_scroll = value;
             }
         }
 
@@ -99,8 +115,9 @@ namespace AsimVr.Demo
             //TODO: Test in VR.
             SetTracked(true);
             SetDepressedButtons(m_buttons);
-            SetScroll(Input.GetScroll());
+            SetScroll(m_scroll);
             m_buttons = 0;
+            m_scroll = Vector2.zero;
         }
 
         /// <summary>

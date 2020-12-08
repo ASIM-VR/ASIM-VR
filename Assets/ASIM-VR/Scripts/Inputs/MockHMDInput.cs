@@ -33,57 +33,57 @@ namespace AsimVr.Inputs
             m_leftHand = left.GetComponent<XRRayInteractor>();
         }
 
-        public void UpdateTrigger(AsimTrigger trigger, AsimState state, TriggerAction action)
+        public void UpdateTrigger(InputHelpers.Button button, AsimState state, TriggerAction action)
         {
             var (controller, ray) = GetCurrent();
             switch(state)
             {
                 case AsimState.Down:
-                    if(GetTriggerDown(trigger))
-                        action?.Invoke(controller.controllerNode, ray);
+                    if(GetTriggerDown(button))
+                        action?.Invoke(controller, ray);
                     break;
 
                 case AsimState.Hold:
-                    if(GetTrigger(trigger))
-                        action?.Invoke(controller.controllerNode, ray);
+                    if(GetTrigger(button))
+                        action?.Invoke(controller, ray);
                     break;
 
                 case AsimState.Up:
-                    if(GetTriggerUp(trigger))
-                        action?.Invoke(controller.controllerNode, ray);
+                    if(GetTriggerUp(button))
+                        action?.Invoke(controller, ray);
                     break;
             }
         }
 
-        private bool GetTriggerDown(AsimTrigger trigger)
+        private bool GetTriggerDown(InputHelpers.Button trigger)
         {
             return Input.GetKeyDown(TriggerToKeyCode(trigger));
         }
 
-        private bool GetTrigger(AsimTrigger trigger)
+        private bool GetTrigger(InputHelpers.Button trigger)
         {
             return Input.GetKey(TriggerToKeyCode(trigger));
         }
 
-        private bool GetTriggerUp(AsimTrigger trigger)
+        private bool GetTriggerUp(InputHelpers.Button trigger)
         {
             return Input.GetKeyUp(TriggerToKeyCode(trigger));
         }
 
-        private KeyCode TriggerToKeyCode(AsimTrigger trigger)
+        private KeyCode TriggerToKeyCode(InputHelpers.Button trigger)
         {
             switch(trigger)
             {
-                case AsimTrigger.Primary:
+                case InputHelpers.Button.Trigger:
                     return m_primary;
 
-                case AsimTrigger.Secondary:
+                case InputHelpers.Button.Grip:
                     return m_secondary;
 
-                case AsimTrigger.Button1:
+                case InputHelpers.Button.PrimaryButton:
                     return m_button1;
 
-                case AsimTrigger.Button2:
+                case InputHelpers.Button.SecondaryButton:
                     return m_button2;
             }
             return KeyCode.None;
