@@ -72,6 +72,11 @@ namespace AsimVr.Inputs.Examples
 
         private GrabTarget m_target;
 
+        private void Awake()
+        {
+            m_target = new GrabTarget();
+        }
+
         private void OnEnable()
         {
             Input.AddListener(InputHelpers.Button.Trigger, AsimState.Down, TryStartGrab);
