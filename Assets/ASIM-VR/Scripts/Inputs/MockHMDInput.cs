@@ -7,10 +7,10 @@ namespace AsimVr.Inputs
     /// Provide keyboard and mouse input implementation.
     /// By default right hand controller is used, hold left ctrl to use left hand controller.
     /// Triggers:
-    ///     Primary:    Left mouse button
-    ///     Secondary:  Right mouse button
-    ///     Button1:    1
-    ///     Button2:    2
+    ///     InputHelpers.Button.Trigger:            Left mouse button
+    ///     InputHelpers.Button.Grip:               Right mouse button
+    ///     InputHelpers.Button.PrimaryButton:      1
+    ///     InputHelpers.Button.SecondaryButton:    2
     /// </summary>
     public class MockHMDInput : IAsimInput
     {
