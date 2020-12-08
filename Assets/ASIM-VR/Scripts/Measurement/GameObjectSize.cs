@@ -13,6 +13,40 @@ public class GameObjectSize : Tool
     [SerializeField]
     private XRController controller;
 
+    void Start()
+    {
+        rightHandLastState = false;
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
+        {
+            if (triggered != rightHandLastState)
+            {
+                Debug.Log("SizeCalculator: Calculating screens size");
+                SearchCalculableObject();;
+
+                rightHandLastState = triggered;
+            }  
+        }
+        else if (controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool pressed) && pressed)
+        {
+            if (pressed != rightHandLastState)
+            {
+                Debug.Log("SizeCalculator: secondaryButton pressed, clearing infoDisplay");
+                InfoDisplay.Instance.ClearText();
+            }
+        }
+        else
+        {
+            rightHandLastState = false;
+        }
+
+    }
+
     private bool GetXRInputPress()
     {
         return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out var value) && value;
@@ -44,17 +78,5 @@ public class GameObjectSize : Tool
             "Depth: " + objectSize.z.ToString("F2") + "m");
     }
 
-    // Update is called once per frame
-    private void Update()
-    {
-        //If certain button is pressed Display text will be set to empty strings
-        if(Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out var value))
-        {
-            InfoDisplay.Instance.ClearText();
-        }
-        else if(Input.GetMouseButtonDown(0) || GetXRInputPress())
-        {
-            SearchCalculableObject();
-        }
-    }
+
 }
