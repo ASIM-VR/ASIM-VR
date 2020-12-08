@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class GameObjectSize : Tool
 {
     public override AsimTool Type => AsimTool.ObjectSize;
+    public override string ToolName => "Object size calculator";
 
     private void OnEnable()
     {

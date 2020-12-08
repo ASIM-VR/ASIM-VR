@@ -6,17 +6,20 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
-public class RaycastDistanceHandler : MonoBehaviour
+public class RaycastDistanceHandler : Tool
 {
-    [SerializeField]
-    private TextMeshProUGUI playerDistanceText;
-    [SerializeField]
-    private TextMeshProUGUI point1Text;
-    [SerializeField]
-    private TextMeshProUGUI point2Text;
+    public override AsimTool Type => AsimTool.TapeMeasure;
+    public override string ToolName => "Object distance calculator";
 
-    [SerializeField]
-    private TextMeshProUGUI measurementText;
+    /*    [SerializeField]
+        private TextMeshProUGUI playerDistanceText;
+        [SerializeField]
+        private TextMeshProUGUI point1Text;
+        [SerializeField]
+        private TextMeshProUGUI point2Text;
+
+        [SerializeField]
+        private TextMeshProUGUI measurementText;*/
 
     [SerializeField]
     private XRRayInteractor controllerRaycast;
@@ -43,8 +46,7 @@ public class RaycastDistanceHandler : MonoBehaviour
 
     private void Update()
     {
-        GetDistance();
-
+        
         if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
         {
             if (triggered != rightHandLastState)
@@ -66,20 +68,33 @@ public class RaycastDistanceHandler : MonoBehaviour
         {
             rightHandLastState = false;
         }
+
+
+        if (Input.GetMouseButtonDown(1))
+        {
+
+            Debug.Log("hiiren klikkaus");
+        
+            MeasureDistance();
+        }
+
+
+        RenderText();
+
     }
 
-    void GetDistance()
+    string GetDistance()
     {
         RaycastHit ray;
         controllerRaycast.GetCurrentRaycastHit(out ray);
         float distance = ray.distance;
         if (distance == 0)
         {
-            playerDistanceText.SetText("No target");
+            return "No target";
         }
         else 
         {
-            playerDistanceText.SetText(ray.distance.ToString("0.00") + "m");
+            return ray.distance.ToString("0.00") + "m";
         }
     }
 
@@ -88,45 +103,75 @@ public class RaycastDistanceHandler : MonoBehaviour
     {
         point1 = Vector3.zero;
         point2 = Vector3.zero;
-        point1Text.SetText("Point 1: " + point1.ToString());
-        point2Text.SetText("Point 2: " + point2.ToString());
-        measurementText.SetText("Distance: ");
         lineDrawer.ResetLine();
         lineDrawer.enabled = false;
     }
 
-    void CalculateDistance()
+    string GetCalculatedDistance()
     {
         var distance = Vector3.Distance(point1, point2);
-        measurementText.SetText("Distance: " + distance.ToString("0.00") + "m");
+        return "Distance: " + distance.ToString("0.00") + "m";
     }
 
     void MeasureDistance()
     {
+
+
+        if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
+        {
+            Debug.Log("RaycastDistanceHandler: resetting");
+            ResetPoints();
+            firstPress = false;
+            secondPress = false;
+        }
+
         // Returns boolean; turn into an if statement. RaycastHit exists only within if.
-        if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
+        else if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
         {
             if (!firstPress && !secondPress)
             {
                 point1 = rayhit.point;
-                point1Text.SetText("Point 1: " + point1.ToString());
                 firstPress = true;
             }
             else if (firstPress && !secondPress)
             {
                 point2 = rayhit.point;
-                point2Text.SetText("Point 2: " + point2.ToString());
-                CalculateDistance();
                 secondPress = true;
                 lineDrawer.DrawLine(point1, point2);
             }
-            else if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
-            {
-                Debug.Log("RaycastDistanceHandler: resetting");
-                ResetPoints();
-                firstPress = false;
-                secondPress = false;
-            }
+    
         }
+        
     }
+
+    void RenderText()
+    {
+
+        Debug.Log(firstPress + " " + secondPress);
+
+        if (firstPress && !secondPress)
+        {
+            InfoDisplay.Instance.SetText(
+                GetDistance(),
+                "Point 1: " + point1.ToString()
+                );
+        } 
+        else if (firstPress && secondPress) 
+        {
+            var distance = Vector3.Distance(point1, point2);
+
+            InfoDisplay.Instance.SetText(
+                GetDistance(),
+                "Point 1: " + point1.ToString(),
+                "Point 2: " + point2.ToString(),
+                GetCalculatedDistance()
+            );
+        }
+        else
+        {
+            InfoDisplay.Instance.SetText(GetDistance());
+        }
+
+    }
+
 }

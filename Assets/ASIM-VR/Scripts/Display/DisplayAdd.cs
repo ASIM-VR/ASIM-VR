@@ -9,6 +9,7 @@ using UnityEngine.XR;
 public class DisplayAdd : Tool
 {
     public override AsimTool Type => AsimTool.AddRemove;
+    public override string ToolName => "Add or remove displays";
 
     [SerializeField]
     private Destroy display;
@@ -22,6 +23,7 @@ public class DisplayAdd : Tool
     // Start is called before the first frame update
     void Start()
     {
+        
         mainCamera = Camera.main;
     }
 
