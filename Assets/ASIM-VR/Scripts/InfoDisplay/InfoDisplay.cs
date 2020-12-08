@@ -6,6 +6,7 @@ using TMPro;
 public class InfoDisplay : MonoBehaviour
 {
     private TextMeshProUGUI textField;
+    private ToolManager toolManager;
 
     public static InfoDisplay Instance { get; private set; }
     
@@ -16,21 +17,44 @@ public class InfoDisplay : MonoBehaviour
             Debug.LogError("InfoDisplay instance already set!", Instance);
             return;
         }
-
         Instance = this;
         textField = GetComponentInChildren<TextMeshProUGUI>();
+
+        toolManager = FindObjectOfType<ToolManager>();
+
         ClearText();
     }
 
     public void SetText(params string[] strArray)
     {
-        textField.SetText(string.Join("\r\n", strArray));
-    }
+        string activeToolName = toolManager.GetActiveToolName();
 
+        if (activeToolName != null)
+        {
+            textField.SetText(activeToolName + "\r\n" + string.Join("\r\n", strArray));
+        }
+        else
+        {
+            textField.SetText(string.Join("\r\n", strArray));
+        }
+        
+    }
 
     public void ClearText()
     {
-        textField.SetText("");
+
+        string activeToolName = toolManager.GetActiveToolName();
+
+        if (activeToolName != null)
+        {
+            textField.SetText(activeToolName + "\r\n");
+        }
+        else
+        {
+            textField.SetText("");
+        }
+
+        
     }
 
 }

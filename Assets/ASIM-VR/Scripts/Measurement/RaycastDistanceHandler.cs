@@ -9,6 +9,7 @@ using UnityEngine.XR;
 public class RaycastDistanceHandler : Tool
 {
     public override AsimTool Type => AsimTool.TapeMeasure;
+    public override string ToolName => "Object distance calculator";
 
     /*    [SerializeField]
         private TextMeshProUGUI playerDistanceText;

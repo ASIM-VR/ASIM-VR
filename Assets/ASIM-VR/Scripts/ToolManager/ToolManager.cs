@@ -18,6 +18,7 @@ public enum AsimTool
 public class ToolManager : MonoBehaviour
 {
     private List<Tool> Tools;
+    private Tool ActiveTool;
 
     void Awake()
     {
@@ -36,11 +37,24 @@ public class ToolManager : MonoBehaviour
     }
 
     private void ActivateTool(AsimTool tool) {
+        
+        
 
         foreach (Tool nTool in Tools)
         {
-            nTool.gameObject.SetActive(nTool.Type.Equals(tool));
+            if (nTool.Type.Equals(tool))
+            {
+                nTool.gameObject.SetActive(true);
+                ActiveTool = nTool;
+            }
+            else
+            {
+                nTool.gameObject.SetActive(false);
+            }
+            
         }
+        InfoDisplay.Instance.ClearText();
+
     }
     private void DeactivateTools()
     {
@@ -48,6 +62,9 @@ public class ToolManager : MonoBehaviour
         {
             nTool.gameObject.SetActive(false);
         }
+        ActiveTool = null;
+        
+        InfoDisplay.Instance.ClearText();
     }
     
     void Update()
@@ -69,6 +86,15 @@ public class ToolManager : MonoBehaviour
         {
             DeactivateTools();
         }
+    }
+
+    public string GetActiveToolName()
+    {
+        if (ActiveTool == null)
+        {
+            return null;
+        }
+        return ActiveTool.ToolName;
     }
 
     // Tämä tarvii tehdä jokaiselle työkalulle
