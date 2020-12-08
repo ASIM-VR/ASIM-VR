@@ -1,52 +1,28 @@
-﻿using UnityEngine;
-using UnityEngine.XR;
+﻿using AsimVr.Inputs;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GameObjectSize : Tool
 {
     public override AsimTool Type => AsimTool.ObjectSize;
 
-    //VR controller that we use to control the ray
-    [SerializeField]
-    private XRRayInteractor controllerRay;
-
-    [SerializeField]
-    private XRController controller;
-
-    private bool rightHandLastState;
-
-    private void Start()
+    private void OnEnable()
     {
-        rightHandLastState = false;
+        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
+        AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, ClearTarget);
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void FindTarget(XRController controller, XRRayInteractor interactor)
     {
-        if(controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
-        {
-            if(triggered != rightHandLastState)
-            {
-                Debug.Log("SizeCalculator: Calculating screens size");
-                SearchCalculableObject();
-                rightHandLastState = triggered;
-            }
-        }
-        else if(controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool pressed) && pressed)
-        {
-            if(pressed != rightHandLastState)
-            {
-                Debug.Log("SizeCalculator: secondaryButton pressed, clearing infoDisplay");
-                InfoDisplay.Instance.ClearText();
-            }
-        }
-        else
-        {
-            rightHandLastState = false;
-        }
+        SearchCalculableObject(interactor);
     }
 
-    private void SearchCalculableObject()
+    private void ClearTarget(XRController controller, XRRayInteractor interactor)
+    {
+        InfoDisplay.Instance.ClearText();
+    }
+
+    private void SearchCalculableObject(XRRayInteractor controllerRay)
     {
         if(controllerRay.GetCurrentRaycastHit(out var hit))
         {
