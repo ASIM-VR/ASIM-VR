@@ -1,18 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 
+[DefaultExecutionOrder(-50)]
 public class InfoDisplay : MonoBehaviour
 {
     private TextMeshProUGUI textField;
     private ToolManager toolManager;
 
     public static InfoDisplay Instance { get; private set; }
-    
-    void Awake()
+
+    private void Awake()
     {
-        if (Instance != null)
+        if(Instance != null)
         {
             Debug.LogError("InfoDisplay instance already set!", Instance);
             return;
@@ -29,7 +28,7 @@ public class InfoDisplay : MonoBehaviour
     {
         string activeToolName = toolManager.GetActiveToolName();
 
-        if (activeToolName != null)
+        if(activeToolName != null)
         {
             textField.SetText(activeToolName + "\r\n" + string.Join("\r\n", strArray));
         }
@@ -37,15 +36,13 @@ public class InfoDisplay : MonoBehaviour
         {
             textField.SetText(string.Join("\r\n", strArray));
         }
-        
     }
 
     public void ClearText()
     {
-
         string activeToolName = toolManager.GetActiveToolName();
 
-        if (activeToolName != null)
+        if(activeToolName != null)
         {
             textField.SetText(activeToolName + "\r\n");
         }
@@ -53,8 +50,5 @@ public class InfoDisplay : MonoBehaviour
         {
             textField.SetText("");
         }
-
-        
     }
-
 }

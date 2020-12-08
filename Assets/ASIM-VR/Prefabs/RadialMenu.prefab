@@ -187,7 +187,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3279387887023850623}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.32}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 3279387888474144186}
@@ -729,8 +729,9 @@ GameObject:
   - component: {fileID: 4541023973977044628}
   - component: {fileID: 8403374700442772986}
   - component: {fileID: 5102796139275977685}
+  - component: {fileID: 70573984}
   m_Layer: 0
-  m_Name: Radial Menu
+  m_Name: RadialMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -777,3 +778,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e1bc9c4a41385742b8bc748445e156c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &70573984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7653146998820018767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65f72bf2701eebe448acfd73d611d922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_menu: {fileID: 3279387887023850617}
+  m_up: 49
+  m_right: 50
+  m_down: 51
+  m_left: 52
+  m_select: 101

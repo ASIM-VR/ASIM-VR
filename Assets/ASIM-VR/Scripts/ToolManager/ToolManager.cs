@@ -1,26 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
-
 
 public enum AsimTool
 {
     //Lisää tähän kaikki työkalut
     None,
+
     ToolPlaceholder,
     AddRemove,
     ObjectSize,
     TapeMeasure
 }
 
-
 public class ToolManager : MonoBehaviour
 {
     private List<Tool> Tools;
     private Tool ActiveTool;
 
-    void Awake()
+    private void Awake()
     {
         Tools = new List<Tool>();
 
@@ -36,13 +33,11 @@ public class ToolManager : MonoBehaviour
         DeactivateTools();
     }
 
-    private void ActivateTool(AsimTool tool) {
-        
-        
-
-        foreach (Tool nTool in Tools)
+    private void ActivateTool(AsimTool tool)
+    {
+        foreach(Tool nTool in Tools)
         {
-            if (nTool.Type.Equals(tool))
+            if(nTool.Type.Equals(tool))
             {
                 nTool.gameObject.SetActive(true);
                 ActiveTool = nTool;
@@ -51,38 +46,24 @@ public class ToolManager : MonoBehaviour
             {
                 nTool.gameObject.SetActive(false);
             }
-            
         }
         InfoDisplay.Instance.ClearText();
-
     }
+
     private void DeactivateTools()
     {
-        foreach (Tool nTool in Tools)
+        foreach(Tool nTool in Tools)
         {
             nTool.gameObject.SetActive(false);
         }
         ActiveTool = null;
-        
+
         InfoDisplay.Instance.ClearText();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        // Temporary test functionality
-        if (Input.GetKeyDown("1"))
-        {
-            ActivateAddRemove();
-        }
-        else if (Input.GetKeyDown("2"))
-        {
-            ActivateObjectSize();
-        }
-        else if (Input.GetKeyDown("3"))
-        {
-            ActivateTapeMeasure();
-        }
-        else if (Input.GetKeyDown("0"))
+        if(Input.GetKeyDown("0"))
         {
             DeactivateTools();
         }
@@ -90,7 +71,7 @@ public class ToolManager : MonoBehaviour
 
     public string GetActiveToolName()
     {
-        if (ActiveTool == null)
+        if(ActiveTool == null)
         {
             return null;
         }

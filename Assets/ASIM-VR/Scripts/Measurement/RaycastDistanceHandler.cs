@@ -1,177 +1,131 @@
-﻿using System.Xml;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using AsimVr.Inputs;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class RaycastDistanceHandler : Tool
 {
+    private enum MeasureState
+    {
+        NoPoints,
+        OnePoint,
+        TwoPoints,
+    }
+
     public override AsimTool Type => AsimTool.TapeMeasure;
     public override string ToolName => "Object distance calculator";
-
-    /*    [SerializeField]
-        private TextMeshProUGUI playerDistanceText;
-        [SerializeField]
-        private TextMeshProUGUI point1Text;
-        [SerializeField]
-        private TextMeshProUGUI point2Text;
-
-        [SerializeField]
-        private TextMeshProUGUI measurementText;*/
 
     [SerializeField]
     private XRRayInteractor controllerRaycast;
 
     [SerializeField]
-    private XRController controller;
-    
-    [SerializeField]
     private LineDrawer lineDrawer;
 
+    [SerializeField]
+    private XRNode hand = XRNode.RightHand;
+
+    private MeasureState measureState;
     private Vector3 point1;
     private Vector3 point2;
 
-    private bool firstPress;
-    private bool secondPress;
-    bool rightHandLastState; // Used to track button press state.
-    
-    void Start()
+    private void OnEnable()
     {
-        rightHandLastState = false;
-        firstPress = false;
-        secondPress = false;
+        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, SetPoint);
+    }
+
+    private void OnDisable()
+    {
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, SetPoint);
+    }
+
+    private void Reset()
+    {
+        foreach(var controller in FindObjectsOfType<XRController>())
+        {
+            if(controller.controllerNode == hand && controller.TryGetComponent(out XRRayInteractor interactor))
+            {
+                controllerRaycast = interactor;
+            }
+        }
+        lineDrawer = GetComponentInChildren<LineDrawer>();
     }
 
     private void Update()
     {
-        
-        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
-        {
-            if (triggered != rightHandLastState)
-            {
-                Debug.Log("RaycastDistanceHandler: Measuring Distance");
-                MeasureDistance();
-
-                rightHandLastState = triggered;
-            }  
-        }
-        else if (controller.inputDevice.TryGetFeatureValue(CommonUsages.primaryButton, out bool pressed) && pressed)
-        {
-            if (pressed != rightHandLastState)
-            {
-                Debug.Log("RaycastDistanceHandler: primaryButton pressed");
-            }
-        }
-        else
-        {
-            rightHandLastState = false;
-        }
-
-
-        if (Input.GetMouseButtonDown(1))
-        {
-
-            Debug.Log("hiiren klikkaus");
-        
-            MeasureDistance();
-        }
-
-
         RenderText();
-
     }
 
-    string GetDistance()
+    private void SetPoint(XRController controller, XRRayInteractor interactor)
     {
-        RaycastHit ray;
-        controllerRaycast.GetCurrentRaycastHit(out ray);
-        float distance = ray.distance;
-        if (distance == 0)
+        if(controller.controllerNode == hand)
         {
-            return "No target";
-        }
-        else 
-        {
-            return ray.distance.ToString("0.00") + "m";
+            MeasureDistance(interactor);
         }
     }
 
-
-    void ResetPoints()
+    private void MeasureDistance(XRRayInteractor interactor)
     {
-        point1 = Vector3.zero;
-        point2 = Vector3.zero;
-        lineDrawer.ResetLine();
-        lineDrawer.enabled = false;
-    }
-
-    string GetCalculatedDistance()
-    {
-        var distance = Vector3.Distance(point1, point2);
-        return "Distance: " + distance.ToString("0.00") + "m";
-    }
-
-    void MeasureDistance()
-    {
-
-
-        if (firstPress && secondPress) // BUG: ResetPoints() does not work without a target.
+        if(measureState == MeasureState.TwoPoints)
         {
-            Debug.Log("RaycastDistanceHandler: resetting");
             ResetPoints();
-            firstPress = false;
-            secondPress = false;
         }
-
-        // Returns boolean; turn into an if statement. RaycastHit exists only within if.
-        else if (controllerRaycast.GetCurrentRaycastHit(out RaycastHit rayhit))
+        else if(interactor.GetCurrentRaycastHit(out RaycastHit rayhit))
         {
-            if (!firstPress && !secondPress)
+            if(measureState == MeasureState.NoPoints)
             {
                 point1 = rayhit.point;
-                firstPress = true;
+                measureState = MeasureState.OnePoint;
             }
-            else if (firstPress && !secondPress)
+            else if(measureState == MeasureState.OnePoint)
             {
                 point2 = rayhit.point;
-                secondPress = true;
                 lineDrawer.DrawLine(point1, point2);
+                measureState = MeasureState.TwoPoints;
             }
-    
         }
-        
     }
 
-    void RenderText()
+    private void ResetPoints()
     {
-
-        Debug.Log(firstPress + " " + secondPress);
-
-        if (firstPress && !secondPress)
-        {
-            InfoDisplay.Instance.SetText(
-                GetDistance(),
-                "Point 1: " + point1.ToString()
-                );
-        } 
-        else if (firstPress && secondPress) 
-        {
-            var distance = Vector3.Distance(point1, point2);
-
-            InfoDisplay.Instance.SetText(
-                GetDistance(),
-                "Point 1: " + point1.ToString(),
-                "Point 2: " + point2.ToString(),
-                GetCalculatedDistance()
-            );
-        }
-        else
-        {
-            InfoDisplay.Instance.SetText(GetDistance());
-        }
-
+        lineDrawer.ResetLine();
+        lineDrawer.enabled = false;
+        measureState = MeasureState.NoPoints;
     }
 
+    private string GetDistanceText()
+    {
+        return controllerRaycast.GetCurrentRaycastHit(out var hit)
+            ? $"{hit.distance:0.00}m"
+            : "No target";
+    }
+
+    private string GetPointDistanceText()
+    {
+        var distance = Vector3.Distance(point1, point2);
+        return $"Distance: {distance:0.00}m";
+    }
+
+    private void RenderText()
+    {
+        switch(measureState)
+        {
+            case MeasureState.OnePoint:
+                InfoDisplay.Instance.SetText(
+                    GetDistanceText(),
+                    $"Point 1: {point1}");
+                break;
+
+            case MeasureState.TwoPoints:
+                InfoDisplay.Instance.SetText(
+                    GetDistanceText(),
+                    $"Point 1: {point1}",
+                    $"Point 2: {point2}",
+                    GetPointDistanceText());
+                break;
+
+            default:
+                InfoDisplay.Instance.SetText(GetDistanceText());
+                break;
+        }
+    }
 }
