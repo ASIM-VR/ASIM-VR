@@ -183,6 +183,7 @@ namespace AsimVr.Inputs
                 //No device or mock hmd selected.
                 //Loaded device name can be empty if the selected XR plugin fails to load.
                 case "":
+                case "MockHMD":
                 case "MockHMD Display":
                     //Use mouse and keyboard controls.
                     Input = new MockHMDInput(m_rightHand, m_leftHand);

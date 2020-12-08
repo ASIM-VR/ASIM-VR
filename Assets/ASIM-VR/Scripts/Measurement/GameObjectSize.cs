@@ -13,7 +13,9 @@ public class GameObjectSize : Tool
     [SerializeField]
     private XRController controller;
 
-    void Start()
+    private bool rightHandLastState;
+
+    private void Start()
     {
         rightHandLastState = false;
     }
@@ -21,20 +23,18 @@ public class GameObjectSize : Tool
     // Update is called once per frame
     private void Update()
     {
-
-        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
+        if(controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
         {
-            if (triggered != rightHandLastState)
+            if(triggered != rightHandLastState)
             {
                 Debug.Log("SizeCalculator: Calculating screens size");
-                SearchCalculableObject();;
-
+                SearchCalculableObject();
                 rightHandLastState = triggered;
-            }  
+            }
         }
-        else if (controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool pressed) && pressed)
+        else if(controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool pressed) && pressed)
         {
-            if (pressed != rightHandLastState)
+            if(pressed != rightHandLastState)
             {
                 Debug.Log("SizeCalculator: secondaryButton pressed, clearing infoDisplay");
                 InfoDisplay.Instance.ClearText();
@@ -44,12 +44,6 @@ public class GameObjectSize : Tool
         {
             rightHandLastState = false;
         }
-
-    }
-
-    private bool GetXRInputPress()
-    {
-        return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out var value) && value;
     }
 
     private void SearchCalculableObject()
@@ -77,6 +71,4 @@ public class GameObjectSize : Tool
             "Height: " + objectSize.y.ToString("F2") + "m",
             "Depth: " + objectSize.z.ToString("F2") + "m");
     }
-
-
 }
