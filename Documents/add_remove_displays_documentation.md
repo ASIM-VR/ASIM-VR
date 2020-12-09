@@ -1,14 +1,14 @@
 # Add / Remove Displays
-Tool for adding and removing display game objects.
 
-Similar functionality exist in XR Interaction Toolkit: no
-{if similar functionality exist how is this different?}
+Tool for instantiating and destroying a given prefab. The prefab should contain a `Destroy` component so it can be destroyed.
 
 ## How to use
 
-Serialized fields:
-Display : Prefab to be added
-Controller Ray : Controller that is used for pointing target display when removing
+Serialized fields
+| Field | Description |
+| --- | ---|
+| Display | Prefab instantiated on add |
+| Controller Ray | Controller that is used for pointing target display when removing |
 
 ## Inputs  
 Uses input: yes
@@ -20,8 +20,3 @@ Inputs:
 
  - E : Add display
  - R : Remove target display
-
-
-## Other
-
-{Other notices/problems with the feature}

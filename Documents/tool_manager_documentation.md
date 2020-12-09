@@ -1,25 +1,24 @@
 
 # Tool Manager
 
-Provides methods to activating and deactivatin tool components.
-
-Similar functionality exist in XR Interaction Toolkit: no
+Automatically collects and deactivates game objects that contain a component inheriting `Tool` class. These tools can be activated by calling a public method implemented by the manager. This way only one type of tool can be active at once.
 
 ## How to use
 
-RadialMenu should call these methods to activate tools
+Activate a tool by calling a public methods implemented by the ToolManager component.
 
-	ActivateAddRemove(); //Activate Add / Remove Display -tool
-	ActivateTapeMeasure(); 
-    ActivateObjectSize();
-    DeactivateTools();
+```C#
+ActivateAddRemove();
+ActivateTapeMeasure(); 
+ActivateObjectSize();
+DeactivateTools();
+```
 
-## Inputs  
-
-Uses input: no
-
-Inputs: (Only debugging)
- - 1,2.. : Activate tool
- -  0 : Deactivate tools
+To add a new tool:
+ - Add tool type to `AsimTool` enum
+ - Create new public method `ActivateToolType()`, where ToolType is replaced with the new type
+ - The new method should call `ActivateTool(AsimTool.ToolType);`, where ToolType is replaced with the new type
 
 ## Other
+
+- Radial Menu calls these public methods using UnityEvents
