@@ -18,10 +18,13 @@ namespace AsimVr.Movement
             {
                 transform.position += transform.forward * Vertical * Time.deltaTime;
                 transform.position += transform.right * Horizontal * Time.deltaTime;
+                transform.position += transform.up * (Up + Down) * Time.deltaTime;
             }
         }
 
         private float Vertical => Input.GetAxis("Vertical") * m_speed;
         private float Horizontal => Input.GetAxis("Horizontal") * m_speed;
+        private float Up => Input.GetKey(KeyCode.Space) ? m_speed : 0;
+        private float Down => Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) ? -m_speed : 0;
     }
 }

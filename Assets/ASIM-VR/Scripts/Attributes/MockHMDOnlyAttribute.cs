@@ -18,7 +18,8 @@ namespace AsimVr
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void InitializeMockHDMOnlyComponents()
         {
-            var active = XRSettings.loadedDeviceName == "MockHMD Display";
+            var active = XRSettings.loadedDeviceName == "MockHMD" ||
+                         XRSettings.loadedDeviceName == "MockHMD Display";
             foreach(var type in Assembly.GetExecutingAssembly().GetTypes())
             {
                 if(type.GetCustomAttributes(typeof(MockHMDOnlyAttribute), false).Length > 0)

@@ -6,7 +6,7 @@ using UnityEngine;
 public class ToolPlaceholder : Tool
 {
     public override AsimTool Type => AsimTool.ToolPlaceholder;
-
+    public override string ToolName => "Tool placeholder";
 
 
     // Update is called once per frame

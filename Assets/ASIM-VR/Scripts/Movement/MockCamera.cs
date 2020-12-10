@@ -15,9 +15,8 @@ namespace AsimVr.Movement
         [SerializeField]
         private float m_eyeHeight = 1.7f;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             transform.position += Vector3.up * m_eyeHeight;
         }
     }

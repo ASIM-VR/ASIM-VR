@@ -12,7 +12,7 @@ This project uses the following external assets and packages:
 ## How to use
 - Clone repository: `git clone https://github.com/ASIM-VR/ASIM-VR.git`
 - Open with Unity 2019.4.9f1
-- Select target device from `File/Project Settings/XR Plug-in Management`
+- Drag the target device to the top of the list in `File/Project Settings/Player` under the `XR Settings` section
 
 ## Project Structure
 Project related files should be under `Assets/ASIM-VR` folder.  

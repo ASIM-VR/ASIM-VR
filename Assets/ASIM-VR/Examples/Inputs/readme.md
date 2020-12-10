@@ -10,9 +10,9 @@ To use AsimInput you have to have a game object with the AsimInput component wit
 //Access the current instance
 AsimInput.Instance
 //Use AddListener to listen for a trigger
-AsimInput.Instance.AddListener(AsimTrigger, AsimState, TriggerAction)
+AsimInput.Instance.AddListener(InputHelpers.Button, AsimState, TriggerAction)
 //Use RemoveListener to remove a listener
-AsimInput.Instance.RemoveListener(AsimTrigger, AsimState, TriggerAction)
+AsimInput.Instance.RemoveListener(InputHelpers.Button, AsimState, TriggerAction)
 ```
 
 ### Input Implementation

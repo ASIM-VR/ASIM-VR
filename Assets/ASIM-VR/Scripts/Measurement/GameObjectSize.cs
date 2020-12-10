@@ -1,24 +1,40 @@
-﻿using UnityEngine;
-using UnityEngine.XR;
+﻿using AsimVr.Inputs;
+using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class GameObjectSize : Tool
 {
     public override AsimTool Type => AsimTool.ObjectSize;
+    public override string ToolName => "Object size calculator";
 
-    //VR controller that we use to control the ray
-    [SerializeField]
-    private XRRayInteractor controllerRay;
+    private bool showingText;
 
-    [SerializeField]
-    private XRController controller;
-
-    private bool GetXRInputPress()
+    private void OnEnable()
     {
-        return controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out var value) && value;
+        showingText = false;
+        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
+        //AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, ClearTarget);
     }
 
-    private void SearchCalculableObject()
+    private void FindTarget(XRController controller, XRRayInteractor interactor)
+    {
+        if (showingText == false)
+        {
+            SearchCalculableObject(interactor);
+        }
+        else if (showingText == true)
+        {
+            InfoDisplay.Instance.ClearText();
+            showingText = false;
+        }
+    }
+
+    private void ClearTarget(XRController controller, XRRayInteractor interactor)
+    {
+        InfoDisplay.Instance.ClearText();
+    }
+
+    private void SearchCalculableObject(XRRayInteractor controllerRay)
     {
         if(controllerRay.GetCurrentRaycastHit(out var hit))
         {
@@ -27,6 +43,7 @@ public class GameObjectSize : Tool
             if(hit.transform.gameObject.CompareTag("Measurable"))
             {
                 PrintSize(hit);
+                showingText = true;
             }
         }
     }
@@ -42,19 +59,5 @@ public class GameObjectSize : Tool
             "Width: " + objectSize.x.ToString("F2") + "m",
             "Height: " + objectSize.y.ToString("F2") + "m",
             "Depth: " + objectSize.z.ToString("F2") + "m");
-    }
-
-    // Update is called once per frame
-    private void Update()
-    {
-        //If certain button is pressed Display text will be set to empty strings
-        if(Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out var value))
-        {
-            InfoDisplay.Instance.ClearText();
-        }
-        else if(Input.GetMouseButtonDown(0) || GetXRInputPress())
-        {
-            SearchCalculableObject();
-        }
     }
 }

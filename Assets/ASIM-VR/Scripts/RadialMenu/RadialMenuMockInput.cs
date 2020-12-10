@@ -14,10 +14,10 @@ namespace AsimVr.Inputs
         private KeyCode m_up = KeyCode.Alpha1;
 
         [SerializeField]
-        private KeyCode m_rigth = KeyCode.Alpha2;
+        private KeyCode m_right = KeyCode.Alpha2;
 
         [SerializeField]
-        private KeyCode m_down = KeyCode.Alpha4;
+        private KeyCode m_down = KeyCode.Alpha3;
 
         [SerializeField]
         private KeyCode m_left = KeyCode.Alpha4;
@@ -45,10 +45,10 @@ namespace AsimVr.Inputs
 
         private Vector2 Position => new Vector2
         {
-            x = Input.GetKey(KeyCode.Alpha2) ? 1
-              : Input.GetKey(KeyCode.Alpha4) ? -1 : 0,
-            y = Input.GetKey(KeyCode.Alpha1) ? 1
-              : Input.GetKey(KeyCode.Alpha3) ? -1 : 0
+            x = Input.GetKey(m_right) ? 1
+              : Input.GetKey(m_left) ? -1 : 0,
+            y = Input.GetKey(m_up) ? 1
+              : Input.GetKey(m_down) ? -1 : 0
         };
     }
 }
