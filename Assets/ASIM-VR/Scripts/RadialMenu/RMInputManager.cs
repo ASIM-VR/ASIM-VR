@@ -16,7 +16,6 @@ public class RMInputManager : MonoBehaviour
         AsimInput.Instance.AddListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Down, ShowRadialMenu);
         AsimInput.Instance.AddListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Up, HideRadialMenu);
         AsimInput.Instance.AddListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Hold, UpdateTouchPosition);
-        AsimInput.Instance.AddListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, SelectActive);
     }
 
     private void OnDisable()
@@ -24,7 +23,6 @@ public class RMInputManager : MonoBehaviour
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Down, ShowRadialMenu);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Up, HideRadialMenu);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Primary2DAxisTouch, AsimState.Hold, UpdateTouchPosition);
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, SelectActive);
     }
 
     private void ShowRadialMenu(XRController controller, XRRayInteractor interactor)
@@ -42,7 +40,12 @@ public class RMInputManager : MonoBehaviour
            touchPosition != Vector2.zero)
         {
             RadialMenu.SetTouchPosition(touchPosition);
-            RadialMenu.ActivateHighlithedSection();
+            if (touchPosition.magnitude > 0.9)
+            {
+                RadialMenu.ActivateHighlithedSection();
+                RadialMenu.Show(false);
+            }
+            
         }
     }
 
@@ -54,11 +57,4 @@ public class RMInputManager : MonoBehaviour
         }
     }
 
-    private void SelectActive(XRController controller, XRRayInteractor interactor)
-    {
-        if(controller.controllerNode == hand)
-        {
-            //RadialMenu.ActivateHighlithedSection();
-        }
-    }
 }
