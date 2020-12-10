@@ -1,10 +1,8 @@
-﻿//using System.Collections;
-using System.Collections.Generic;
-//using System.Diagnostics;
-using System.Security.Cryptography;
+﻿using AsimVr.Inputs;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
+
 
 public class DisplayAdd : Tool
 {
@@ -13,42 +11,50 @@ public class DisplayAdd : Tool
 
     [SerializeField]
     private Destroy display;
-    
-    Camera mainCamera;
-
-    [SerializeField]
-    private XRRayInteractor controllerRay;
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
-        mainCamera = Camera.main;
+        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
+        AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
     }
 
-    // Update is called once per frame
-    
-    void Update()
+    private void OnDisable()
     {
-        if (Input.GetKeyDown("e"))
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
+    }
+
+
+    private void AddDisplay(XRController controller, XRRayInteractor interactor)
+    {
+
+        Destroy current = Instantiate(display, controller.transform.position + controller.transform.forward * 2, controller.transform.rotation);
+
+        if (interactor.GetCurrentRaycastHit(out var hit))
         {
-            Instantiate(display, mainCamera.transform.position + mainCamera.transform.forward * 2, mainCamera.transform.rotation);
+            //Move to the current target position and offset from the surface based on the current normal.
+            current.transform.position = hit.point + (hit.normal * 0.01f);
+            //Align with the current surface.
+            current.transform.rotation = Quaternion.FromToRotation(Vector3.forward, -hit.normal);
+            return;
         }
+      
+    }
 
-        if ( Input.GetKeyDown("r") ) {
-            
-            RaycastHit hit;
-            if(controllerRay.GetCurrentRaycastHit(out hit))
+
+    private void FindAndRemove(XRController controller, XRRayInteractor interactor)
+    {
+        RaycastHit hit;
+        if (interactor.GetCurrentRaycastHit(out hit))
+        {
+            Destroy disp = hit.collider.GetComponent<Destroy>();
+
+            if (disp != null)
             {
-                Destroy disp = hit.collider.GetComponent<Destroy>();
-
-                if (disp != null)
-                {
-                    disp.DestroyDisplay();
-                }
+                disp.DestroyDisplay();
             }
         }
-
     }
+
 }
