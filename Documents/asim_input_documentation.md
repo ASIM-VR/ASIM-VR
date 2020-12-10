@@ -5,12 +5,12 @@ AsimInput provides an event listener for `InputHelpers.Button` inputs with state
 ## Inputs
 
 Desktop Support
-| Button | Desktop |
-| --- | --- |
-| InputHelpers.Button.Trigger | Mouse 0 |
-| InputHelpers.Button.Grip | Mouse 1 |
-| InputHelpers.Button.PrimaryButton | 1 |
-| InputHelpers.Button.SecondaryButton | 2 |
+| Button                              | Desktop |
+| ---                                 | ---     |
+| InputHelpers.Button.Trigger         | Mouse 0 |
+| InputHelpers.Button.Grip            | Mouse 1 |
+| InputHelpers.Button.PrimaryButton   | E       |
+| InputHelpers.Button.SecondaryButton | R       |
 
 ## Other
 - [Examples](../Assets/ASIM-VR/Examples/Inputs)

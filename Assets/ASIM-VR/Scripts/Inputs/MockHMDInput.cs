@@ -7,10 +7,10 @@ namespace AsimVr.Inputs
     /// Provide keyboard and mouse input implementation.
     /// By default right hand controller is used, hold left ctrl to use left hand controller.
     /// Triggers:
-    ///     Primary:    Left mouse button
-    ///     Secondary:  Right mouse button
-    ///     Button1:    1
-    ///     Button2:    2
+    ///     InputHelpers.Button.Trigger:            Left mouse button
+    ///     InputHelpers.Button.Grip:               Right mouse button
+    ///     InputHelpers.Button.PrimaryButton:      E
+    ///     InputHelpers.Button.SecondaryButton:    R
     /// </summary>
     public class MockHMDInput : IAsimInput
     {
@@ -22,8 +22,8 @@ namespace AsimVr.Inputs
 
         private readonly KeyCode m_primary = KeyCode.Mouse0;
         private readonly KeyCode m_secondary = KeyCode.Mouse1;
-        private readonly KeyCode m_button1 = KeyCode.Alpha1;
-        private readonly KeyCode m_button2 = KeyCode.Alpha2;
+        private readonly KeyCode m_button1 = KeyCode.E;
+        private readonly KeyCode m_button2 = KeyCode.R;
 
         public MockHMDInput(XRController right, XRController left)
         {
@@ -96,11 +96,6 @@ namespace AsimVr.Inputs
                 return (m_leftController, m_leftHand);
             }
             return (m_rightController, m_rightHand);
-        }
-
-        public Vector2 GetScroll()
-        {
-            return new Vector2(Input.mouseScrollDelta.x, Input.mouseScrollDelta.y);
         }
     }
 }

@@ -22,9 +22,6 @@ namespace AsimVr.Inputs
         [SerializeField]
         private KeyCode m_left = KeyCode.Alpha4;
 
-        [SerializeField]
-        private KeyCode m_select = KeyCode.E;
-
         private void Reset()
         {
             m_menu = FindObjectOfType<RadialMenu>();
@@ -36,10 +33,7 @@ namespace AsimVr.Inputs
             if(m_menu.gameObject.activeInHierarchy)
             {
                 m_menu.SetTouchPosition(Position);
-                if(Input.GetKeyDown(m_select))
-                {
-                    m_menu.ActivateHighlithedSection();
-                }
+                m_menu.ActivateHighlithedSection();
             }
         }
 

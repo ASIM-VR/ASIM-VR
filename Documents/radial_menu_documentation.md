@@ -11,15 +11,14 @@ Drag the script that implements functionality to each section. For every section
 
 ## Inputs
 #### RMInputManager
-| Button | Description |
-| --- | --- |
+| Button                    | Description                                   |
+| ---                       | ---                                           |
 | Button.Primary2DAxisTouch | Move and active item under radial menu cursor |
 
 #### RadialMenuMockInput
-| Button | Description |
-| :-: | --- |
-| 1 | Move radial menu cursor up |
-| 2 | Move radial menu cursor right |
-| 3 | Move radial menu cursor down |
-| 4 | Move radial menu cursor left |
-| e | Select active item |
+| Button | Description            |
+| :-:    | ---                    |
+| 1      | Active up selection    |
+| 2      | Active right selection |
+| 3      | Active down selection  |
+| 4      | Active left selection  |
