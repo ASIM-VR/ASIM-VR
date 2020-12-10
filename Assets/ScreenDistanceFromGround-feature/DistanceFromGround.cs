@@ -15,21 +15,61 @@ public class DistanceFromGround : MonoBehaviour
     [SerializeField]
     private XRController controller;
 
+    [SerializeField]
+    private LineDrawer lineDrawer;
+
     private float distanceToGround;
 
     private float distanceToScreenCenter;
 
     private float groundPosition;
 
-    bool GetXRInputPress() 
+    private float screenHeight;
+
+    bool rightHandLastState; // Used to track button press state.
+
+    //These vectors are used to draw line between the screen and ground
+    private Vector3 screenBottom;
+    private Vector3 ground;
+ 
+
+    private void Start() 
     {
-        bool value = false;
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value);
-        Debug.Log("PRESSED!");
-        return pressed && value;
+        rightHandLastState = false;
     }
 
 
+    // Update is called once per frame
+    private void Update()
+    {
+
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
+        {
+            if (triggered != rightHandLastState)
+            {
+                Debug.Log("DistanceFromGround: calculating distance from bottom of the screen to ground");
+                ScreenDistanceFromGround();
+
+                rightHandLastState = triggered;
+            }  
+        }
+        else if (controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out bool pressed) && pressed)
+        {
+            if (pressed != rightHandLastState)
+            {
+                Debug.Log("DistanceFromGround: secondaryButton pressed, clearing infoDisplay and clearing the line");
+                lineDrawer.ResetLine();
+                lineDrawer.enabled = false;
+                InfoDisplay.Instance.ClearText();
+            }
+        }
+        else
+        {
+            rightHandLastState = false;
+        }
+
+    }
+            
 
     //Function that is called everytime function Update() is called.
     void ScreenDistanceFromGround() 
@@ -37,14 +77,14 @@ public class DistanceFromGround : MonoBehaviour
         RaycastHit hit;
         controllerRay.GetCurrentRaycastHit(out hit);
 
-        if(hit.transform == true && hit.transform.gameObject.CompareTag("Screen") && Input.GetMouseButtonDown(0) || GetXRInputPress()) {
+        if(hit.transform == true && hit.transform.gameObject.CompareTag("Screen")) {
             CalculateDistance(hit);
         }
     }
 
     void CalculateDistance(RaycastHit hit) 
     {
-        //Center of the screens distance to ground
+        //screen center y component
         distanceToScreenCenter = hit.transform.position.y;
 
         Debug.Log(hit.transform.gameObject.name);
@@ -52,22 +92,18 @@ public class DistanceFromGround : MonoBehaviour
         //Grounds Y position
         groundPosition = GameObject.FindWithTag("Ground").transform.position.y;
 
+        screenHeight = hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y;
+
         //Calculate how far from the ground is bottom of the screen
-        distanceToGround = distanceToScreenCenter - hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y / 2 - groundPosition;
+        distanceToGround = distanceToScreenCenter - screenHeight / 2 - groundPosition;
+
+        //Setting correct values for points that we use to draw a line
+        screenBottom = new Vector3(hit.transform.position.x, hit.transform.position.y - screenHeight / 2, hit.transform.position.z);
+        ground = new Vector3(hit.transform.position.x, hit.transform.position.y - distanceToGround, hit.transform.position.z);
+
+        lineDrawer.DrawLine(screenBottom, ground);
 
         InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + distanceToGround.ToString("F2") + " meters from the ground");
 
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out var value))
-        {
-            InfoDisplay.Instance.ClearText();
-        }
-        ScreenDistanceFromGround();
     }
 }
