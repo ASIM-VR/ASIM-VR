@@ -18,18 +18,12 @@ public class DistanceFromGround : MonoBehaviour
     [SerializeField]
     private LineDrawer lineDrawer;
 
-    private float distanceToGround;
-
-    private float distanceToScreenCenter;
-
-    private float groundPosition;
-
     private float screenHeight;
 
     bool rightHandLastState; // Used to track button press state.
 
     //These vectors are used to draw line between the screen and ground
-    private Vector3 screenBottom;
+    private Vector3 startPosition;
     private Vector3 ground;
  
 
@@ -43,7 +37,7 @@ public class DistanceFromGround : MonoBehaviour
     private void Update()
     {
 
-        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered)
+        if (controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out bool triggered) && triggered )
         {
             if (triggered != rightHandLastState)
             {
@@ -63,6 +57,10 @@ public class DistanceFromGround : MonoBehaviour
                 InfoDisplay.Instance.ClearText();
             }
         }
+        else if (Input.GetMouseButtonDown(0)) {
+            Debug.Log("Clicked left click");
+            ScreenDistanceFromGround();
+        }
         else
         {
             rightHandLastState = false;
@@ -71,7 +69,6 @@ public class DistanceFromGround : MonoBehaviour
     }
             
 
-    //Function that is called everytime function Update() is called.
     void ScreenDistanceFromGround() 
     {
         RaycastHit hit;
@@ -84,26 +81,20 @@ public class DistanceFromGround : MonoBehaviour
 
     void CalculateDistance(RaycastHit hit) 
     {
-        //screen center y component
-        distanceToScreenCenter = hit.transform.position.y;
-
-        Debug.Log(hit.transform.gameObject.name);
-
-        //Grounds Y position
-        groundPosition = GameObject.FindWithTag("Ground").transform.position.y;
+        Debug.Log("Object that was hit with ray: " + hit.transform.gameObject.name);
 
         screenHeight = hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y;
 
-        //Calculate how far from the ground is bottom of the screen
-        distanceToGround = distanceToScreenCenter - screenHeight / 2 - groundPosition;
+        //Bottom of the screen. Where to line should begin and it ends the the ground
+        startPosition = new Vector3(hit.transform.position.x, hit.transform.position.y - screenHeight / 2, hit.transform.position.z);
 
-        //Setting correct values for points that we use to draw a line
-        screenBottom = new Vector3(hit.transform.position.x, hit.transform.position.y - screenHeight / 2, hit.transform.position.z);
-        ground = new Vector3(hit.transform.position.x, hit.transform.position.y - distanceToGround, hit.transform.position.z);
+        RaycastHit hit2;
+        if(Physics.Raycast(startPosition, transform.TransformDirection(Vector3.down), out hit2, Mathf.Infinity)) {
+            ground = hit2.point;
+            lineDrawer.DrawLine(startPosition, ground);        
+        }
 
-        lineDrawer.DrawLine(screenBottom, ground);
-
-        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + distanceToGround.ToString("F2") + " meters from the ground");
+        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + hit2.distance.ToString("F2") + " meters from the ground");
 
     }
 }
