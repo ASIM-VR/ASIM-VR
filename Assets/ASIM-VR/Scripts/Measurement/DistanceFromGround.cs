@@ -1,73 +1,68 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using AsimVr.Inputs;
 using UnityEngine;
-using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
-using UnityEngine.XR;
 
 public class DistanceFromGround : MonoBehaviour
 {
-    
-    //VR controller that we use to control the ray
     [SerializeField]
-    private XRRayInteractor controllerRay;
+    private LineDrawer lineDrawer;
 
-    [SerializeField]
-    private XRController controller;
+    private float screenHeight;
 
-    private float distanceToGround;
+    //These vectors are used to draw line between the screen and ground
+    private Vector3 startPosition;
 
-    private float distanceToScreenCenter;
+    private Vector3 ground;
 
-    private float groundPosition;
-
-    bool GetXRInputPress() 
+    private void OnEnable()
     {
-        bool value = false;
-        bool pressed = controller.inputDevice.TryGetFeatureValue(CommonUsages.triggerButton, out value);
-        Debug.Log("PRESSED!");
-        return pressed && value;
+        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, OnTriggerDown);
+        AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, OnClear);
     }
 
+    private void OnDisable()
+    {
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, OnTriggerDown);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.SecondaryButton, AsimState.Down, OnClear);
+    }
 
+    private void OnTriggerDown(XRController controller, XRRayInteractor interactor)
+    {
+        ScreenDistanceFromGround(interactor);
+    }
+
+    private void OnClear(XRController controller, XRRayInteractor interactor)
+    {
+        lineDrawer.ResetLine();
+        lineDrawer.enabled = false;
+        InfoDisplay.Instance.ClearText();
+    }
 
     //Function that is called everytime function Update() is called.
-    void ScreenDistanceFromGround() 
+    private void ScreenDistanceFromGround(XRRayInteractor interactor)
     {
-        RaycastHit hit;
-        controllerRay.GetCurrentRaycastHit(out hit);
-
-        if(hit.transform == true && hit.transform.gameObject.CompareTag("Screen") && Input.GetMouseButtonDown(0) || GetXRInputPress()) {
+        if(interactor.GetCurrentRaycastHit(out var hit) && hit.transform.gameObject.CompareTag("Screen"))
+        {
             CalculateDistance(hit);
         }
     }
 
-    void CalculateDistance(RaycastHit hit) 
+    private void CalculateDistance(RaycastHit hit)
     {
-        //Center of the screens distance to ground
-        distanceToScreenCenter = hit.transform.position.y;
+        Debug.Log("Object that was hit with ray: " + hit.transform.gameObject.name);
 
-        Debug.Log(hit.transform.gameObject.name);
+        screenHeight = hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y;
 
-        //Grounds Y position
-        groundPosition = GameObject.FindWithTag("Ground").transform.position.y;
+        //Bottom of the screen. Where to line should begin and it ends the the ground
+        startPosition = new Vector3(hit.transform.position.x, hit.transform.position.y - screenHeight / 2, hit.transform.position.z);
 
-        //Calculate how far from the ground is bottom of the screen
-        distanceToGround = distanceToScreenCenter - hit.transform.gameObject.GetComponent<Renderer>().bounds.size.y / 2 - groundPosition;
-
-        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + distanceToGround.ToString("F2") + " meters from the ground");
-
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetMouseButtonDown(1) || controller.inputDevice.TryGetFeatureValue(CommonUsages.secondaryButton, out var value))
+        RaycastHit hit2;
+        if(Physics.Raycast(startPosition, transform.TransformDirection(Vector3.down), out hit2, Mathf.Infinity))
         {
-            InfoDisplay.Instance.ClearText();
+            ground = hit2.point;
+            lineDrawer.DrawLine(startPosition, ground);
         }
-        ScreenDistanceFromGround();
+
+        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + hit2.distance.ToString("F2") + " meters from the ground");
     }
 }
