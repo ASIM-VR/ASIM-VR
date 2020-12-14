@@ -13,25 +13,17 @@ public class GameObjectSize : Tool
     {
         showingText = false;
         AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
-        //AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, ClearTarget);
     }
 
     private void FindTarget(XRController controller, XRRayInteractor interactor)
     {
-        if (showingText == false)
-        {
-            SearchCalculableObject(interactor);
-        }
-        else if (showingText == true)
+        if(showingText)
         {
             InfoDisplay.Instance.ClearText();
             showingText = false;
+            return;
         }
-    }
-
-    private void ClearTarget(XRController controller, XRRayInteractor interactor)
-    {
-        InfoDisplay.Instance.ClearText();
+        SearchCalculableObject(interactor);
     }
 
     private void SearchCalculableObject(XRRayInteractor controllerRay)
@@ -56,8 +48,8 @@ public class GameObjectSize : Tool
 
         InfoDisplay.Instance.SetText(
             hit.transform.gameObject.name + ":",
-            "Width: " + objectSize.x.ToString("F2") + "m",
-            "Height: " + objectSize.y.ToString("F2") + "m",
-            "Depth: " + objectSize.z.ToString("F2") + "m");
+            $"Width: {objectSize.x:F2}m",
+            $"Height: {objectSize.y:F2}m",
+            $"Depth: {objectSize.z:F2}m");
     }
 }

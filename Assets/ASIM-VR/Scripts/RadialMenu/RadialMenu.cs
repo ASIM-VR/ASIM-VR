@@ -1,23 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-
 
 public class RadialMenu : MonoBehaviour
 {
     [Header("Scene")]
     [SerializeField]
     private Transform selectionTransform = null;
+
     [SerializeField]
     private Transform cursorTransfom = null;
 
     [Header("Events")]
     [SerializeField]
     private RadialSection top = null;
+
     [SerializeField]
     private RadialSection right = null;
+
     [SerializeField]
     private RadialSection bottom = null;
+
     [SerializeField]
     private RadialSection left = null;
 
@@ -32,32 +34,11 @@ public class RadialMenu : MonoBehaviour
         CreateAndSetupSections();
     }
 
-    private void CreateAndSetupSections()
-    {
-        radialSections = new List<RadialSection>()
-        {
-            top,
-            right,
-            bottom,
-            left
-        };
-
-        foreach (RadialSection section in radialSections)
-            section.iconRenderer.sprite = section.icon;
-    }
-
     private void Start()
     {
         Show(false);
     }
 
-    public void Show(bool value)
-    {
-        //For animation purposes
-        gameObject.SetActive(value);
-    }
-
-    // Update is called once per frame
     private void Update()
     {
         Vector2 direction = Vector2.zero + touchPosition;
@@ -68,16 +49,48 @@ public class RadialMenu : MonoBehaviour
         SetSelectedEvent(rotation);
     }
 
+    public void Show(bool value)
+    {
+        //For animation purposes
+        gameObject.SetActive(value);
+    }
+
+    //InputManager -> radialMenu.SetTouchPosition(axis)
+    public void SetTouchPosition(Vector2 newValue)
+    {
+        touchPosition = newValue;
+    }
+
+    public void ActivateHighlithedSection()
+    {
+        highlightedSection.onPress.Invoke();
+    }
+
+    private void CreateAndSetupSections()
+    {
+        radialSections = new List<RadialSection>()
+        {
+            top,
+            right,
+            bottom,
+            left
+        };
+
+        foreach(RadialSection section in radialSections)
+            section.iconRenderer.sprite = section.icon;
+    }
+
     private float GetDegree(Vector2 direction)
     {
         float value = Mathf.Atan2(direction.x, direction.y);
         value *= Mathf.Rad2Deg;
 
-        if (value < 0)
+        if(value < 0)
             value += 360.0f;
 
         return value;
     }
+
     private void SetCursorPosition()
     {
         cursorTransfom.localPosition = touchPosition;
@@ -103,20 +116,9 @@ public class RadialMenu : MonoBehaviour
     {
         int index = GetNearestIncrement(currentRotation);
 
-        if (index == 4)
+        if(index == 4)
             index = 0;
 
         highlightedSection = radialSections[index];
-    }
-
-    //InputManager -> radialMenu.SetTouchPosition(axis)
-    public void SetTouchPosition(Vector2 newValue)
-    {
-        touchPosition = newValue;
-    }
-
-    public void ActivateHighlithedSection()
-    {
-        highlightedSection.onPress.Invoke();
     }
 }

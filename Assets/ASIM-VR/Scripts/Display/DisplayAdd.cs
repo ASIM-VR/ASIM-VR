@@ -1,8 +1,6 @@
 ﻿using AsimVr.Inputs;
 using UnityEngine;
-using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
-
 
 public class DisplayAdd : Tool
 {
@@ -11,7 +9,6 @@ public class DisplayAdd : Tool
 
     [SerializeField]
     private Destroy display;
-
 
     private void OnEnable()
     {
@@ -25,13 +22,11 @@ public class DisplayAdd : Tool
         AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
     }
 
-
     private void AddDisplay(XRController controller, XRRayInteractor interactor)
     {
-
         Destroy current = Instantiate(display, controller.transform.position + controller.transform.forward * 2, controller.transform.rotation);
 
-        if (interactor.GetCurrentRaycastHit(out var hit))
+        if(interactor.GetCurrentRaycastHit(out var hit))
         {
             //Move to the current target position and offset from the surface based on the current normal.
             current.transform.position = hit.point + (hit.normal * 0.01f);
@@ -39,22 +34,16 @@ public class DisplayAdd : Tool
             current.transform.rotation = Quaternion.FromToRotation(Vector3.forward, -hit.normal);
             return;
         }
-      
     }
-
 
     private void FindAndRemove(XRController controller, XRRayInteractor interactor)
     {
-        RaycastHit hit;
-        if (interactor.GetCurrentRaycastHit(out hit))
+        if(interactor.GetCurrentRaycastHit(out var hit))
         {
-            Destroy disp = hit.collider.GetComponent<Destroy>();
-
-            if (disp != null)
+            if(hit.collider.TryGetComponent(out Destroy destroy))
             {
-                disp.DestroyDisplay();
+                destroy.DestroyDisplay();
             }
         }
     }
-
 }

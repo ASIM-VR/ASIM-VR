@@ -1,19 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
 
 public class ChangeTextColor : MonoBehaviour
 {
-    TMP_Text textColor;
+    private TMP_Text textColor;
 
-    void Start()
+    private void Start()
     {
         textColor = GetComponent<TMP_Text>();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         float r = Random.Range(0.1f, 1.0f);
         textColor.color = new Color(r, r, r, 1.0f);

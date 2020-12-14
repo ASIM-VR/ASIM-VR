@@ -40,12 +40,11 @@ public class RMInputManager : MonoBehaviour
            touchPosition != Vector2.zero)
         {
             RadialMenu.SetTouchPosition(touchPosition);
-            if (touchPosition.magnitude > 0.9)
+            if(touchPosition.magnitude > 0.9f)
             {
                 RadialMenu.ActivateHighlithedSection();
                 RadialMenu.Show(false);
             }
-            
         }
     }
 
@@ -56,5 +55,4 @@ public class RMInputManager : MonoBehaviour
             RadialMenu.Show(false);
         }
     }
-
 }
