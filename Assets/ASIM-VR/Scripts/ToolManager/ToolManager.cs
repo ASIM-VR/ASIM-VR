@@ -9,7 +9,8 @@ public enum AsimTool
     ToolPlaceholder,
     AddRemove,
     ObjectSize,
-    TapeMeasure
+    TapeMeasure,
+    DistanceFromGround
 }
 
 public class ToolManager : MonoBehaviour
@@ -31,6 +32,14 @@ public class ToolManager : MonoBehaviour
         }
 
         DeactivateTools();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown("0"))
+        {
+            DeactivateTools();
+        }
     }
 
     private void ActivateTool(AsimTool tool)
@@ -61,14 +70,6 @@ public class ToolManager : MonoBehaviour
         InfoDisplay.Instance.ClearText();
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown("0"))
-        {
-            DeactivateTools();
-        }
-    }
-
     public string GetActiveToolName()
     {
         if(ActiveTool == null)
@@ -97,5 +98,10 @@ public class ToolManager : MonoBehaviour
     public void ActivateObjectSize()
     {
         ActivateTool(AsimTool.ObjectSize);
+    }
+
+    public void ActivateDistanceFromGround()
+    {
+        ActivateTool(AsimTool.DistanceFromGround);
     }
 }

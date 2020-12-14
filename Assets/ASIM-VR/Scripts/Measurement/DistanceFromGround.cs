@@ -2,8 +2,11 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class DistanceFromGround : MonoBehaviour
+public class DistanceFromGround : Tool
 {
+    public override AsimTool Type => AsimTool.DistanceFromGround;
+    public override string ToolName => "Distance from ground";
+
     [SerializeField]
     private LineDrawer lineDrawer;
 
