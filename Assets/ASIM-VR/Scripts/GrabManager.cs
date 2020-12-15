@@ -1,55 +1,8 @@
-﻿using AsimVr.Inputs;
+﻿using System;
+using AsimVr.Inputs;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
-
-public class GrabTarget
-{
-    private readonly bool m_wasKinematic;
-    private readonly Transform m_parent;
-
-    public GrabTarget()
-    {
-        IsValid = false;
-    }
-
-    public GrabTarget(Rigidbody rigidbody, Collider collider)
-    {
-        Rigidbody = rigidbody;
-        Collider = collider;
-        IsValid = rigidbody != null && collider != null;
-        m_parent = Rigidbody.transform.parent;
-        m_wasKinematic = Rigidbody.isKinematic;
-    }
-
-    public void StartGrab(Transform parent)
-    {
-        if(IsValid)
-        {
-            transform.parent = parent;
-            Extents = Collider.bounds.extents;
-            Collider.enabled = false;
-            Rigidbody.isKinematic = true;
-        }
-    }
-
-    public void StopGrab()
-    {
-        if(IsValid)
-        {
-            Collider.enabled = true;
-            Rigidbody.isKinematic = m_wasKinematic;
-            transform.parent = m_parent;
-        }
-    }
-
-    public Transform transform => Rigidbody.transform;
-
-    public Collider Collider { get; }
-    public Rigidbody Rigidbody { get; }
-    public bool IsValid { get; }
-    public Vector3 Extents { get; private set; }
-}
 
 /// <summary>
 /// Simple object grabbing with AsimInput.
@@ -82,8 +35,10 @@ public class GrabManager : MonoBehaviour
 
     private void Awake()
     {
-        m_target = new GrabTarget();
+        m_target = null;
     }
+
+    
 
     private void OnEnable()
     {
@@ -92,6 +47,7 @@ public class GrabManager : MonoBehaviour
         Input.AddListener(InputHelpers.Button.Grip, AsimState.Up, TryStopGrab);
         Input.AddListener(InputHelpers.Button.PrimaryAxis2DUp, AsimState.Hold, MoveGrabbedItemForward);
         Input.AddListener(InputHelpers.Button.PrimaryAxis2DDown, AsimState.Hold, MoveGrabbedItemBack);
+        Input.AddListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, ChangeGrabStyle);
     }
 
     private void OnDisable()
@@ -101,6 +57,21 @@ public class GrabManager : MonoBehaviour
         Input.RemoveListener(InputHelpers.Button.Grip, AsimState.Up, TryStopGrab);
         Input.RemoveListener(InputHelpers.Button.PrimaryAxis2DUp, AsimState.Hold, MoveGrabbedItemForward);
         Input.RemoveListener(InputHelpers.Button.PrimaryAxis2DDown, AsimState.Hold, MoveGrabbedItemBack);
+        Input.RemoveListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, ChangeGrabStyle);
+    }
+
+
+    private void ChangeGrabStyle(XRController controller, XRRayInteractor interactor)
+    {
+        int currentIndex = (int) m_style;
+        m_style = GetNextStyle(currentIndex);
+    }
+
+    private GrabStyle GetNextStyle(int currentIndex)
+    {
+
+        var enums = (GrabStyle[])Enum.GetValues(typeof(GrabStyle));
+        return currentIndex + 1 < enums.Length? enums[currentIndex+1] : enums[0]; 
     }
 
     private void Reset()
@@ -118,7 +89,7 @@ public class GrabManager : MonoBehaviour
             if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.transform.position) <= maxZoomDistance)
             {
                 m_target.transform.rotation = interactor.attachTransform.rotation;
-                m_target.transform.position += m_target.transform.forward * grabZoomSpeed;
+                m_target.transform.position += m_target.transform.forward * grabZoomSpeed * Time.deltaTime;
             }
         }
     }
@@ -130,7 +101,7 @@ public class GrabManager : MonoBehaviour
             if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.transform.position) >= minZoomDistance)
             {
                 m_target.transform.rotation = interactor.attachTransform.rotation;
-                m_target.transform.position -= m_target.transform.forward * grabZoomSpeed;
+                m_target.transform.position -= m_target.transform.forward * grabZoomSpeed * Time.deltaTime;
             }
         }
     }
@@ -139,17 +110,20 @@ public class GrabManager : MonoBehaviour
     {
         if(IsOwner(controller) && TryGetTarget(interactor, out m_target))
         {
-            m_target.StartGrab(transform);
-            if(m_style == GrabStyle.Grab)
-            {
-                m_target.transform.localPosition = Vector3.zero;
+            if (m_target != null){
+                m_target.StartGrab(transform);
+                if(m_style == GrabStyle.Grab)
+                {
+                    m_target.transform.localPosition = Vector3.zero;
+                }
             }
         }
     }
 
     private void TryMoveGrab(XRController controller, XRRayInteractor interactor)
     {
-        if(m_target.IsValid && IsOwner(controller) && m_style == GrabStyle.Laser)
+
+        if(m_target != null && m_target.IsValid && IsOwner(controller) && m_style == GrabStyle.Laser)
         {
             TryMoveTo(interactor);
         }
@@ -157,7 +131,7 @@ public class GrabManager : MonoBehaviour
 
     private void TryStopGrab(XRController controller, XRRayInteractor interactor)
     {
-        if(IsOwner(controller))
+        if(m_target != null && IsOwner(controller))
         {
             m_target.StopGrab();
         }
@@ -181,13 +155,13 @@ public class GrabManager : MonoBehaviour
     {
         if(interactor.GetCurrentRaycastHit(out var hit))
         {
-            if(hit.transform.TryGetComponent(out Rigidbody rigidbody))
+            if(hit.transform.TryGetComponent(out GrabTarget grabTarget))
             {
-                target = new GrabTarget(rigidbody, hit.transform.GetComponent<Collider>());
+                target = grabTarget;
                 return true;
             }
         }
-        target = new GrabTarget();
+        target = null;
         return false;
     }
 

@@ -1065,6 +1065,7 @@ GameObject:
   - component: {fileID: 971823896}
   - component: {fileID: 971823895}
   - component: {fileID: 971823894}
+  - component: {fileID: 971823893}
   m_Layer: 0
   m_Name: MockDisplay
   m_TagString: Selectable
@@ -1086,6 +1087,18 @@ Transform:
   m_Father: {fileID: 1778106559}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &971823893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 971823891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec613f4d78acb2540b114e8c53dc88e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &971823894
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1514,8 +1527,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6349ef17a1084e43b5c9bba76251e93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_style: 2
+  m_style: 1
   m_hand: 5
+  grabZoomSpeed: 1.1
+  maxZoomDistance: 5
+  minZoomDistance: 0.5
 --- !u!1001 &1647106894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2023,6 +2039,11 @@ PrefabInstance:
       propertyPath: m_InteractionManager
       value: 
       objectReference: {fileID: 915205305}
+    - target: {fileID: 910024640503769235, guid: fa5c1d94d64ce724090cc29a8d45b218,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 910024640522733615, guid: fa5c1d94d64ce724090cc29a8d45b218,
         type: 3}
       propertyPath: m_LocalPosition.x
