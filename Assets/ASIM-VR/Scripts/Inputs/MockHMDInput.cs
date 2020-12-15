@@ -91,7 +91,7 @@ namespace AsimVr.Inputs
 
         private (XRController controller, XRRayInteractor ray) GetCurrent()
         {
-            if(Input.GetKey(KeyCode.LeftControl))
+            if(Input.GetKey(KeyCode.LeftShift))
             {
                 return (m_leftController, m_leftHand);
             }
