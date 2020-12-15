@@ -351,11 +351,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d8cfa163dec804d9cc8ea302f598b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: 4
-  visualization: {fileID: 0}
-  scrollThreshold: 0.1
-  trackpadScrollSpeed: 0.05
-  joystickScrollSpeed: 75
 --- !u!114 &8835309459352316076
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,11 +719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d8cfa163dec804d9cc8ea302f598b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: 4
-  visualization: {fileID: 0}
-  scrollThreshold: 0.1
-  trackpadScrollSpeed: 0.05
-  joystickScrollSpeed: 75
 --- !u!1 &883565141832680920
 GameObject:
   m_ObjectHideFlags: 0
