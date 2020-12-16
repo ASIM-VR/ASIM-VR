@@ -63,7 +63,7 @@ public class RadialMenu : MonoBehaviour
 
     public void ActivateHighlithedSection()
     {
-        highlightedSection.onPress.Invoke();
+        highlightedSection?.onPress?.Invoke();
     }
 
     private void CreateAndSetupSections()

@@ -438,24 +438,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: 0.6
       objectReference: {fileID: 0}
-    - target: {fileID: 3279387888768493763, guid: a87cf6b176d92474a8182fe7caf5f25f,
-        type: 3}
-      propertyPath: top.icon
-      value: 
-      objectReference: {fileID: 21300000, guid: 90de77e1c1a3216488a4756889959e2d,
-        type: 3}
-    - target: {fileID: 3279387888768493763, guid: a87cf6b176d92474a8182fe7caf5f25f,
-        type: 3}
-      propertyPath: bottom.icon
-      value: 
-      objectReference: {fileID: 21300000, guid: aa5defd7a6bfd904da5430a1c54afd21,
-        type: 3}
-    - target: {fileID: 3279387888768493763, guid: a87cf6b176d92474a8182fe7caf5f25f,
-        type: 3}
-      propertyPath: left.icon
-      value: 
-      objectReference: {fileID: 21300000, guid: b127829f649608f48b3eb3b89daea811,
-        type: 3}
     - target: {fileID: 3279387888768493764, guid: a87cf6b176d92474a8182fe7caf5f25f,
         type: 3}
       propertyPath: m_LocalPosition.z
