@@ -1,26 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-
 public class GrabTarget : MonoBehaviour
 {
     private bool m_wasKinematic;
     private Transform m_parent;
-    private Rigidbody rigidbody;
-    private Collider collider;
-    private void Awake() {
-        rigidbody = GetComponent<Rigidbody>(); 
-        collider= GetComponent<Collider>();
-        Rigidbody = rigidbody;
-        Collider = collider;
-        IsValid = rigidbody != null && collider != null;
-        m_parent = Rigidbody.transform.parent;
-        m_wasKinematic = Rigidbody.isKinematic;
-    }
 
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        Collider = GetComponent<Collider>();
+        IsValid = Rigidbody != null && Collider != null;
+        m_wasKinematic = Rigidbody.isKinematic;
+        m_parent = transform.parent;
+    }
 
     public void StartGrab(Transform parent)
     {
@@ -43,18 +37,16 @@ public class GrabTarget : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         var contact = collision.GetContact(0);
-        this.transform.position = contact.point + (contact.normal * Mathf.Max(this.Extents.z, 0.01f));
-        this.transform.rotation = Quaternion.FromToRotation(Vector3.forward, -contact.normal);
+        transform.position = contact.point + (contact.normal * Mathf.Max(Extents.z, 0.01f));
+        transform.rotation = Quaternion.LookRotation(-contact.normal, Vector3.up);
         Debug.Log("On Collision");
     }
 
-    public Transform transform => Rigidbody.transform;
-
-    public Collider Collider { get;set; }
-    public Rigidbody Rigidbody { get;set; }
-    public bool IsValid { get; set;}
+    public Collider Collider { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
+    public bool IsValid { get; private set; }
     public Vector3 Extents { get; private set; }
 }

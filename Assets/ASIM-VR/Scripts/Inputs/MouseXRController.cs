@@ -64,6 +64,6 @@ namespace AsimVr.Inputs
         }
 
         private XRControllerBinding Current => UseLeft ? m_leftHand : m_rightHand;
-        private bool UseLeft => Input.GetKey(KeyCode.LeftControl);
+        private bool UseLeft => Input.GetKey(KeyCode.LeftShift);
     }
 }

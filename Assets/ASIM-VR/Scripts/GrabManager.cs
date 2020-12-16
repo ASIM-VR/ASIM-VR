@@ -1,5 +1,5 @@
-﻿using System;
-using AsimVr.Inputs;
+﻿using AsimVr.Inputs;
+using System;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -32,13 +32,13 @@ public class GrabManager : MonoBehaviour
     private float minZoomDistance = 0.5f;
 
     private GrabTarget m_target;
+    private GrabStyle[] m_grabStyles;
 
     private void Awake()
     {
+        m_grabStyles = (GrabStyle[])Enum.GetValues(typeof(GrabStyle));
         m_target = null;
     }
-
-    
 
     private void OnEnable()
     {
@@ -60,18 +60,10 @@ public class GrabManager : MonoBehaviour
         Input.RemoveListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, ChangeGrabStyle);
     }
 
-
     private void ChangeGrabStyle(XRController controller, XRRayInteractor interactor)
     {
-        int currentIndex = (int) m_style;
-        m_style = GetNextStyle(currentIndex);
-    }
-
-    private GrabStyle GetNextStyle(int currentIndex)
-    {
-
-        var enums = (GrabStyle[])Enum.GetValues(typeof(GrabStyle));
-        return currentIndex + 1 < enums.Length? enums[currentIndex+1] : enums[0]; 
+        int currentIndex = (int)m_style;
+        m_style = m_grabStyles[++currentIndex % m_grabStyles.Length];
     }
 
     private void Reset()
@@ -110,7 +102,8 @@ public class GrabManager : MonoBehaviour
     {
         if(IsOwner(controller) && TryGetTarget(interactor, out m_target))
         {
-            if (m_target != null){
+            if(m_target != null)
+            {
                 m_target.StartGrab(transform);
                 if(m_style == GrabStyle.Grab)
                 {
@@ -122,7 +115,6 @@ public class GrabManager : MonoBehaviour
 
     private void TryMoveGrab(XRController controller, XRRayInteractor interactor)
     {
-
         if(m_target != null && m_target.IsValid && IsOwner(controller) && m_style == GrabStyle.Laser)
         {
             TryMoveTo(interactor);
@@ -144,7 +136,7 @@ public class GrabManager : MonoBehaviour
             //Move to the current target position and offset from the surface based on the current normal.
             m_target.transform.position = hit.point + (hit.normal * Mathf.Max(m_target.Extents.z, 0.01f));
             //Align with the current surface.
-            m_target.transform.rotation = Quaternion.FromToRotation(Vector3.forward, -hit.normal);
+            m_target.transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
             return;
         }
         m_target.transform.localPosition = Vector3.forward;

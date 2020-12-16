@@ -24,6 +24,7 @@ namespace AsimVr.Inputs
         private readonly KeyCode m_secondary = KeyCode.Mouse1;
         private readonly KeyCode m_button1 = KeyCode.E;
         private readonly KeyCode m_button2 = KeyCode.R;
+        private readonly KeyCode m_axisClick = KeyCode.Q;
 
         public MockHMDInput(XRController right, XRController left)
         {
@@ -85,6 +86,9 @@ namespace AsimVr.Inputs
 
                 case InputHelpers.Button.SecondaryButton:
                     return m_button2;
+
+                case InputHelpers.Button.Primary2DAxisClick:
+                    return m_axisClick;
             }
             return KeyCode.None;
         }
