@@ -11,12 +11,8 @@ Serialized fields
 | Controller Ray | Controller that is used for pointing target display when removing |
 
 ## Inputs  
-Uses input: yes
-
-Problems:
- - VR controller inputs not yet implemented
-
-Inputs:
-
- - E : Add display
- - R : Remove target display
+| Button | Description |
+| --- | --- |
+| Button.Trigger | Add Display |
+| Button.PrimaryButton | Remove target display |
+| Button.Grip | Use both controllers to resize object |
