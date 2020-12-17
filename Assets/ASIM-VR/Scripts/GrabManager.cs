@@ -62,8 +62,7 @@ public class GrabManager : MonoBehaviour
 
     private void ChangeGrabStyle(XRController controller, XRRayInteractor interactor)
     {
-        int currentIndex = (int)m_style;
-        m_style = m_grabStyles[++currentIndex % m_grabStyles.Length];
+        m_style = m_grabStyles[((int)m_style + 1) % m_grabStyles.Length];
     }
 
     private void Reset()
@@ -134,7 +133,9 @@ public class GrabManager : MonoBehaviour
         if(interactor.GetCurrentRaycastHit(out var hit))
         {
             //Move to the current target position and offset from the surface based on the current normal.
-            m_target.transform.position = hit.point + (hit.normal * Mathf.Max(m_target.Extents.z, 0.01f));
+            //TODO: Add Extents. See GrabTarget.StartGrab()
+            //      hit.normal * Mathf.Max(m_target.Extents.z, 0.01f)
+            m_target.transform.position = hit.point + (hit.normal * 0.01f);
             //Align with the current surface.
             m_target.transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
             return;

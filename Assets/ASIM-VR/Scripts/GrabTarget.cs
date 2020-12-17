@@ -20,8 +20,11 @@ public class GrabTarget : MonoBehaviour
     {
         if(IsValid)
         {
+            //TODO: Cache local space bounds.extents to Extents.
+            //      Using Collider.bounds returns the global space bounds,
+            //      which are affected by the objects rotation causing
+            //      incorrect offset.
             transform.parent = parent;
-            Extents = Collider.bounds.extents;
             Collider.enabled = false;
             Rigidbody.isKinematic = true;
         }
@@ -40,7 +43,10 @@ public class GrabTarget : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         var contact = collision.GetContact(0);
-        transform.position = contact.point + (contact.normal * Mathf.Max(Extents.z, 0.01f));
+        //TODO: Add Extents. See GrabTarget.StartGrab()
+        //      Mathf.Max(m_target.Extents.z, 0.01f)
+        //      hit.normal * Mathf.Max(m_target.Extents.z, 0.01f)
+        transform.position = contact.point + (contact.normal * 0.01f);
         transform.rotation = Quaternion.LookRotation(-contact.normal, Vector3.up);
         Debug.Log("On Collision");
     }
