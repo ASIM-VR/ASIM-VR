@@ -12,11 +12,31 @@ namespace AsimVr.Inputs
     [DefaultExecutionOrder(100)]
     public class MouseXRController : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField]
         private XRController m_rightHandController;
 
         [SerializeField]
         private XRController m_leftHandController;
+
+        /// <summary>
+        /// Keybind to invoke <see cref="XRController.activateUsage"/>.
+        /// </summary>
+        [Header("Keybinds")]
+        [SerializeField]
+        private KeyCode m_active = KeyCode.F;
+
+        /// <summary>
+        /// Keybind to invoke <see cref="XRController.selectUsage"/>.
+        /// </summary>
+        [SerializeField]
+        private KeyCode m_select = KeyCode.G;
+
+        /// <summary>
+        /// Keybind to invoke <see cref="XRController.uiPressUsage"/>.
+        /// </summary>
+        [SerializeField]
+        private KeyCode m_ui = KeyCode.V;
 
         private XRControllerBinding m_rightHand;
         private XRControllerBinding m_leftHand;
@@ -46,20 +66,26 @@ namespace AsimVr.Inputs
 
         private void OnGUI()
         {
-            GUI.Label(new Rect(10, 10, 300, 20), $"Using {(UseLeft ? "left" : "right")} hand controller");
+            var text = $"Using {(UseLeft ? "left" : "right")} hand controller\n" +
+                $"Active Usage: {m_active}\nSelect Usage: {m_select}\nUI Usage: {m_ui}";
+            GUI.Label(new Rect(10, 10, 300, 300), text);
         }
 
         private void Update()
         {
-            if(Input.GetMouseButton(0))
+            if(Input.GetKeyDown(m_active))
             {
-                Current.Select();
+                Current.Active();
+            }
+
+            if(Input.GetKeyDown(m_ui))
+            {
                 Current.UIPress();
             }
 
-            if(Input.GetMouseButton(1))
+            if(Input.GetKeyDown(m_select))
             {
-                Current.Active();
+                Current.Select();
             }
         }
 

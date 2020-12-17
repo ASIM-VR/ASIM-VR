@@ -11,3 +11,6 @@ Tools are managed by [ToolManager](./tool_manager_documentation.md)
 ## GUI
  - [Radial Menu](./radial_menu_documentation.md)
  - [Info Display](./info_display_documentation.md)
+
+## Other
+ - [Mouse XR Controller](./mouse_xr_controller_documentation.md)
