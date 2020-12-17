@@ -15,6 +15,11 @@ public class GameObjectSize : Tool
         AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
     }
 
+    private void OnDisable()
+    {
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, FindTarget);
+    }
+
     private void FindTarget(XRController controller, XRRayInteractor interactor)
     {
         if(showingText)
