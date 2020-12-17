@@ -26,7 +26,7 @@ public class DisplayAdd : Tool
     private void OnEnable()
     {
         AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
-        AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
+        AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, FindAndRemove);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
@@ -35,7 +35,7 @@ public class DisplayAdd : Tool
     private void OnDisable()
     {
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.SecondaryButton, AsimState.Down, FindAndRemove);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
