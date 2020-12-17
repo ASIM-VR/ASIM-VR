@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.1802844, g: 0.22571433, b: 0.30692336, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: cfe83c1d7f895894fae368757fcb8c5f,
+  m_LightingDataAsset: {fileID: 112000000, guid: 037ddceca6374b34c9a7d757f31de077,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -363,6 +363,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 883565141198440167, guid: a87cf6b176d92474a8182fe7caf5f25f,
+        type: 3}
+      propertyPath: m_ActivateUsage
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 883565141198440167, guid: a87cf6b176d92474a8182fe7caf5f25f,
+        type: 3}
+      propertyPath: m_SelectUsage
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 883565141751780386, guid: a87cf6b176d92474a8182fe7caf5f25f,
+        type: 3}
+      propertyPath: m_ActivateUsage
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 883565141751780386, guid: a87cf6b176d92474a8182fe7caf5f25f,
+        type: 3}
+      propertyPath: m_SelectUsage
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 883565141832680920, guid: a87cf6b176d92474a8182fe7caf5f25f,
         type: 3}
       propertyPath: m_Name
@@ -763,7 +783,15 @@ PrefabInstance:
     - target: {fileID: 1805760906, guid: 1d0148027f68c874a8828d8a1a471464, type: 3}
       propertyPath: m_InteractionManager
       value: 
+      objectReference: {fileID: 1637388195}
+    - target: {fileID: 1805760906, guid: 1d0148027f68c874a8828d8a1a471464, type: 3}
+      propertyPath: m_TeleportTrigger
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1805760906, guid: 1d0148027f68c874a8828d8a1a471464, type: 3}
+      propertyPath: m_TeleportationProvider
+      value: 
+      objectReference: {fileID: 1311674709}
     - target: {fileID: 4784461225953702473, guid: 1d0148027f68c874a8828d8a1a471464,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1185,6 +1213,18 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &1311674709 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 883565141832680924, guid: a87cf6b176d92474a8182fe7caf5f25f,
+    type: 3}
+  m_PrefabInstance: {fileID: 322424968}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01f69dc1cb084aa42b2f2f8cd87bc770, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1375972528
 GameObject:
   m_ObjectHideFlags: 0
