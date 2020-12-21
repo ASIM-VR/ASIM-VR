@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
+using ZenFulcrum.EmbeddedBrowser;
 
 public class DisplayAdd : Tool
 {
@@ -18,6 +19,9 @@ public class DisplayAdd : Tool
     private Dictionary<XRNode, (Transform target, Vector3 point)> resizePoints;
     private float previousLength;
 
+    private Browser browser;
+
+
     private void Awake()
     {
         resizePoints = new Dictionary<XRNode, (Transform target, Vector3 point)>();
@@ -25,8 +29,8 @@ public class DisplayAdd : Tool
 
     private void OnEnable()
     {
-        AsimInput.Instance.AddListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
-        AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
+        AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
+        AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
@@ -34,8 +38,8 @@ public class DisplayAdd : Tool
 
     private void OnDisable()
     {
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.Trigger, AsimState.Down, AddDisplay);
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, FindAndRemove);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
@@ -125,6 +129,21 @@ public class DisplayAdd : Tool
         }
     }
 
+
+
+
+    private void SecondaryButtonClick(XRController controller, XRRayInteractor interactor)
+    {
+        if(controller.controllerNode == XRNode.LeftHand)
+        {
+            FindAndRemove(controller, interactor);
+        }
+        else
+        {
+            FindAndSelect(controller, interactor);
+        }
+    }
+
     private void FindAndRemove(XRController controller, XRRayInteractor interactor)
     {
         if(interactor.GetCurrentRaycastHit(out var hit))
@@ -135,4 +154,18 @@ public class DisplayAdd : Tool
             }
         }
     }
+
+
+    private void FindAndSelect(XRController controller, XRRayInteractor interactor)
+    {
+        if (interactor.GetCurrentRaycastHit(out var hit))
+        {
+            if (hit.collider.TryGetComponent(out Browser b))
+            {
+                browser = b;
+                Debug.Log(browser); 
+            }
+        }
+    }
+
 }
