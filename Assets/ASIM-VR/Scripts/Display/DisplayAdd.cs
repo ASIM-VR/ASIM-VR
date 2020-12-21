@@ -46,7 +46,7 @@ public class DisplayAdd : Tool
 
     private void OnEnable()
     {
-        AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
+        //AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
         AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
         
         /*AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
@@ -59,7 +59,7 @@ public class DisplayAdd : Tool
 
         DeSelectDisplay();
 
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
+        //AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
 
         /*AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
@@ -158,30 +158,7 @@ public class DisplayAdd : Tool
 
     private void SecondaryButtonClick(XRController controller, XRRayInteractor interactor)
     {
-/*        if(controller.controllerNode == XRNode.LeftHand)
-        {
-            FindAndRemove(controller, interactor);
-        }
-        else
-        {*/
-            FindAndSelect(controller, interactor);
-        /*}*/
-    }
-
-    /*private void FindAndRemove(XRController controller, XRRayInteractor interactor)
-    {
-        if(interactor.GetCurrentRaycastHit(out var hit))
-        {
-            if(hit.collider.TryGetComponent(out Destroy destroy))
-            {
-                destroy.DestroyDisplay();
-            }
-        }
-    }*/
-
-
-    private void FindAndSelect(XRController controller, XRRayInteractor interactor)
-    {
+    
         if (interactor.GetCurrentRaycastHit(out var hit))
         {
             if (hit.transform.parent.TryGetComponent(out VRBrowserPanel bPanel))
@@ -189,6 +166,18 @@ public class DisplayAdd : Tool
                 SelectDisplay(bPanel);
             }
         }
+        else
+        {
+            AddDisplay(controller, interactor);
+        }
+    }
+
+
+
+
+    private void FindAndSelect(XRController controller, XRRayInteractor interactor)
+    {
+       
     }
 
 

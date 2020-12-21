@@ -13,5 +13,4 @@ Serialized fields
 ## Inputs  
 | Button | Description |
 | --- | --- |
-| Button.PrimaryButton | Add Display |
-| Button.SecondaryButton | Select target display |
+| Button.SecondaryButton | Add/Select target display |
