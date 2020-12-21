@@ -14,38 +14,60 @@ public class DisplayAdd : Tool
     private readonly float maxScale = 5f;
 
     [SerializeField]
-    private Destroy display;
+    private ExternalKeyboard keyboard;
+
+    [SerializeField]
+    private VRBrowserPanel display;
 
     private Dictionary<XRNode, (Transform target, Vector3 point)> resizePoints;
     private float previousLength;
 
-    private Browser browser;
+    private VRBrowserPanel browserPanel;
 
 
     private void Awake()
     {
         resizePoints = new Dictionary<XRNode, (Transform target, Vector3 point)>();
+
+        keyboard.onFocusChange += onFocusChange;
+
+    }
+
+    private void onFocusChange(Browser arg1, bool arg2)
+    {
+        if(browserPanel != null)
+        {
+            keyboard.transform.position = browserPanel.keyboardLocation.transform.position;
+            keyboard.transform.rotation = browserPanel.keyboardLocation.transform.rotation;
+        }
+
+        //throw new System.NotImplementedException();
     }
 
     private void OnEnable()
     {
         AsimInput.Instance.AddListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
         AsimInput.Instance.AddListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
-        AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
+        
+        /*AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
-        AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
+        AsimInput.Instance.AddListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);*/
     }
 
     private void OnDisable()
     {
+
+        DeSelectDisplay();
+
         AsimInput.Instance.RemoveListener(InputHelpers.Button.PrimaryButton, AsimState.Down, AddDisplay);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.SecondaryButton, AsimState.Down, SecondaryButtonClick);
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
+
+        /*AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Down, ControllerGripDown);
         AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Hold, ControllerGripHold);
-        AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);
+        AsimInput.Instance.RemoveListener(InputHelpers.Button.Grip, AsimState.Up, ControllerGripUp);*/
     }
 
-    private void ControllerGripUp(XRController controller, XRRayInteractor interactor)
+  /*  private void ControllerGripUp(XRController controller, XRRayInteractor interactor)
     {
         if(XRSettings.loadedDeviceName == "MockHMD" && controller.controllerNode == XRNode.LeftHand)
         {
@@ -53,9 +75,9 @@ public class DisplayAdd : Tool
         }
 
         resizePoints.Remove(controller.controllerNode);
-    }
+    }*/
 
-    private void ControllerGripDown(XRController controller, XRRayInteractor interactor)
+  /*  private void ControllerGripDown(XRController controller, XRRayInteractor interactor)
     {
         if(interactor.GetCurrentRaycastHit(out var hit))
         {
@@ -69,9 +91,9 @@ public class DisplayAdd : Tool
                 }
             }
         }
-    }
+    }*/
 
-    private void ControllerGripHold(XRController controller, XRRayInteractor interactor)
+    /*private void ControllerGripHold(XRController controller, XRRayInteractor interactor)
     {
         if(XRSettings.loadedDeviceName == "MockHMD" && controller.controllerNode == XRNode.LeftHand)
         {
@@ -114,13 +136,15 @@ public class DisplayAdd : Tool
                 previousLength = Vector3.Distance(leftHand.point, rightHand.point);
             }
         }
-    }
+    }*/
 
     private void AddDisplay(XRController controller, XRRayInteractor interactor)
     {
-        Destroy current = Instantiate(display, controller.transform.position + controller.transform.forward * 2, controller.transform.rotation);
+        VRBrowserPanel current = Instantiate(display, controller.transform.position + controller.transform.forward * 2, controller.transform.rotation);
 
-        if(interactor.GetCurrentRaycastHit(out var hit))
+        SelectDisplay(current);
+
+        if (interactor.GetCurrentRaycastHit(out var hit))
         {
             //Move to the current target position and offset from the surface based on the current normal.
             current.transform.position = hit.point + (hit.normal * 0.01f);
@@ -134,17 +158,17 @@ public class DisplayAdd : Tool
 
     private void SecondaryButtonClick(XRController controller, XRRayInteractor interactor)
     {
-        if(controller.controllerNode == XRNode.LeftHand)
+/*        if(controller.controllerNode == XRNode.LeftHand)
         {
             FindAndRemove(controller, interactor);
         }
         else
-        {
+        {*/
             FindAndSelect(controller, interactor);
-        }
+        /*}*/
     }
 
-    private void FindAndRemove(XRController controller, XRRayInteractor interactor)
+    /*private void FindAndRemove(XRController controller, XRRayInteractor interactor)
     {
         if(interactor.GetCurrentRaycastHit(out var hit))
         {
@@ -153,19 +177,37 @@ public class DisplayAdd : Tool
                 destroy.DestroyDisplay();
             }
         }
-    }
+    }*/
 
 
     private void FindAndSelect(XRController controller, XRRayInteractor interactor)
     {
         if (interactor.GetCurrentRaycastHit(out var hit))
         {
-            if (hit.collider.TryGetComponent(out Browser b))
+            if (hit.transform.parent.TryGetComponent(out VRBrowserPanel bPanel))
             {
-                browser = b;
-                Debug.Log(browser); 
+                SelectDisplay(bPanel);
             }
         }
     }
 
+
+    private void SelectDisplay(VRBrowserPanel bPanel)
+    {
+        DeSelectDisplay();
+        
+        browserPanel = bPanel;
+        browserPanel.controlBrowser.gameObject.SetActive(true);
+
+
+    }
+
+    private void DeSelectDisplay()
+    {
+        if (browserPanel != null)
+        {
+            browserPanel.controlBrowser.gameObject.SetActive(false);
+        }
+            
+    }
 }
