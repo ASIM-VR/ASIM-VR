@@ -8,11 +8,10 @@ Serialized fields
 | Field | Description |
 | --- | ---|
 | Display | Prefab instantiated on add |
-| Controller Ray | Controller that is used for pointing target display when removing |
+| keyboard | EmbeddedBrowser ExternalKeyboard gameObject |
 
 ## Inputs  
 | Button | Description |
 | --- | --- |
-| Button.Trigger | Add Display |
-| Button.PrimaryButton | Remove target display |
-| Button.Grip | Use both controllers to resize object |
+| Button.PrimaryButton | Add Display |
+| Button.SecondaryButton | Select target display |
