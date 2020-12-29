@@ -130,6 +130,7 @@ public class GrabManager : MonoBehaviour
 
     private void TryMoveTo(XRRayInteractor interactor)
     {
+
         if(interactor.GetCurrentRaycastHit(out var hit))
         {
             //Move to the current target position and offset from the surface based on the current normal.

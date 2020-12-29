@@ -1529,7 +1529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_style: 1
   m_hand: 5
-  grabZoomSpeed: 1.1
+  grabZoomSpeed: 1.5
   maxZoomDistance: 5
   minZoomDistance: 0.5
 --- !u!1001 &1647106894
