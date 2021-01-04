@@ -18,9 +18,13 @@ public class GrabManager : MonoBehaviour
 
     [SerializeField]
     private GrabStyle m_style;
-
+    [SerializeField]
+    private float textFadeTime = 1.5f;
+    private float currentTimer;
     [SerializeField]
     private XRNode m_hand;
+    [SerializeField]
+    private InfoDisplay infoDisplay;
 
     [SerializeField]
     private float grabZoomSpeed = 0.1f;
@@ -33,7 +37,7 @@ public class GrabManager : MonoBehaviour
 
     private GrabTarget m_target;
     private GrabStyle[] m_grabStyles;
-
+    private bool timerOn = false;
     private void Awake()
     {
         m_grabStyles = (GrabStyle[])Enum.GetValues(typeof(GrabStyle));
@@ -60,9 +64,37 @@ public class GrabManager : MonoBehaviour
         Input.RemoveListener(InputHelpers.Button.Primary2DAxisClick, AsimState.Down, ChangeGrabStyle);
     }
 
+
+    private void Update() {
+
+        if (timerOn){
+
+            currentTimer -= Time.deltaTime;
+
+            if (currentTimer < 0) {
+                ResetTimer();
+            }
+
+        } 
+    }
+
+    private void ResetTimer() {
+        timerOn = false;
+        currentTimer = textFadeTime;
+        infoDisplay.ClearText();
+    }
+
+    private void StartTimer() {
+        currentTimer = textFadeTime;
+        infoDisplay.SetText("Mode: "+m_style.ToString());
+        timerOn = true;
+    }
+
+
     private void ChangeGrabStyle(XRController controller, XRRayInteractor interactor)
     {
         m_style = m_grabStyles[((int)m_style + 1) % m_grabStyles.Length];
+        StartTimer();
     }
 
     private void Reset()
