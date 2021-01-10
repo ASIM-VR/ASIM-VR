@@ -478,6 +478,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: -0.6
       objectReference: {fileID: 0}
+    - target: {fileID: 8835309459352316076, guid: a87cf6b176d92474a8182fe7caf5f25f,
+        type: 3}
+      propertyPath: textTimer
+      value: 
+      objectReference: {fileID: 2136238328}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a87cf6b176d92474a8182fe7caf5f25f, type: 3}
 --- !u!1 &381052747
@@ -1763,3 +1768,15 @@ ReflectionProbe:
   m_UseOcclusionCulling: 1
   m_Importance: 1
   m_CustomBakedTexture: {fileID: 0}
+--- !u!114 &2136238328 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7247455753060993903, guid: a87cf6b176d92474a8182fe7caf5f25f,
+    type: 3}
+  m_PrefabInstance: {fileID: 322424968}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c253930daf4084d9addc86f056ad5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

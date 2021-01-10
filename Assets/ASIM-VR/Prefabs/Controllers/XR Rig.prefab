@@ -364,6 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_style: 0
+  textTimer: {fileID: 0}
   m_hand: 5
   grabZoomSpeed: 0.1
   maxZoomDistance: 5
@@ -1017,6 +1018,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5909391967772642905}
   - component: {fileID: 4077647887132184158}
+  - component: {fileID: 7247455753060993903}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1052,6 +1054,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_rightHand: {fileID: 883565141198440167}
   m_leftHand: {fileID: 883565141751780386}
+--- !u!114 &7247455753060993903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2524111805157522265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05c253930daf4084d9addc86f056ad5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textFadeTime: 1.5
 --- !u!1001 &1745169594
 PrefabInstance:
   m_ObjectHideFlags: 0
