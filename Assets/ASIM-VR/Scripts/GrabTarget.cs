@@ -2,10 +2,11 @@
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-[RequireComponent(typeof(Transform))]
-
 public class GrabTarget : MonoBehaviour
 {
+    [SerializeField]
+    private bool grabParent;
+
     private bool m_wasKinematic;
     private Transform m_parent;
 
@@ -15,7 +16,7 @@ public class GrabTarget : MonoBehaviour
         Collider = GetComponent<Collider>();
         IsValid = Rigidbody != null && Collider != null;
         m_wasKinematic = Rigidbody.isKinematic;
-        m_parent = transform.parent;
+        m_parent = Transform.parent;
     }
 
     public void StartGrab(Transform parent)
@@ -26,7 +27,7 @@ public class GrabTarget : MonoBehaviour
             //      Using Collider.bounds returns the global space bounds,
             //      which are affected by the objects rotation causing
             //      incorrect offset.
-            transform.parent = parent;
+            Transform.parent = parent;
             Collider.enabled = false;
             Rigidbody.isKinematic = true;
         }
@@ -38,38 +39,11 @@ public class GrabTarget : MonoBehaviour
         {
             Collider.enabled = true;
             Rigidbody.isKinematic = m_wasKinematic;
-            transform.parent = m_parent;
+            Transform.parent = m_parent;
         }
     }
 
-    // void OnCollisionEnter(Collision collision)
-    // {
-    //     var contact = collision.GetContact(0);
-    //     this.transform.position = contact.point + (contact.normal * Mathf.Max(this.Extents.z, 0.01f));
-    //     this.transform.rotation = Quaternion.FromToRotation(Vector3.forward, -contact.normal);
-    //     Debug.Log("On Collision");
-    // }
-
-    private void Update() {
-        
-        var hits = Physics.RaycastAll(transform.position, Vector3.up, 1f);
-
-        foreach(var hit in hits)
-        {
-            if (hit.collider.gameObject == transform.gameObject)
-            {
-                continue;
-            }
-
-        transform.position = hit.point + (hit.normal * Mathf.Max(Extents.z, 0.01f));
-        // transform.rotation = Quaternion.FromToRotation(Vector3.forward, -hit.normal);
-            break;
-        }
-
-        // transform.localPosition = Vector3.forward;
-        // transform.rotation = interactor.transform.rotation;
-
-    }
+    public Transform Transform => grabParent ? transform.parent : transform;
 
     public Collider Collider { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
