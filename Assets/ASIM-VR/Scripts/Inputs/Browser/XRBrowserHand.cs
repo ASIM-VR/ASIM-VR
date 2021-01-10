@@ -1,20 +1,12 @@
-﻿using AsimVr.Inputs;
-using System.Reflection;
+﻿using System.Reflection;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
-
-#if EmbeddedBrowser
-
 using ZenFulcrum.EmbeddedBrowser;
 using ZenFulcrum.EmbeddedBrowser.VR;
 
-#endif
-
-namespace AsimVr.Demo
+namespace AsimVr.Inputs
 {
-#if EmbeddedBrowser
-
     /// <summary>
     /// This script is extension for EmbeddedBrowser.
     /// Custom <see cref="VRBrowserHand"/> for XR-Interaction toolkit.
@@ -159,10 +151,4 @@ namespace AsimVr.Demo
         /// </summary>
         private AsimInput Input => AsimInput.Instance;
     }
-
-#else
-    public class XRBrowserHand : MonoBehaviour
-    {
-    }
-#endif
 }

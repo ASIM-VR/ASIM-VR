@@ -1,19 +1,12 @@
 ﻿using System;
 using UnityEngine.XR;
-
-#if EmbeddedBrowser
-
 using ZenFulcrum.EmbeddedBrowser.VR;
 
-#endif
-
-namespace AsimVr.Demo
+namespace AsimVr.Inputs
 {
     /// <summary>
     /// This script is extension for EmbeddedBrowser.
     /// </summary>
-#if EmbeddedBrowser
-
     public class XRBrowserInput : VRInput
     {
         public override float GetAxis(XRNodeState node, InputAxis axis)
@@ -21,12 +14,4 @@ namespace AsimVr.Demo
             throw new NotImplementedException();
         }
     }
-
-#else
-
-    public class XRBrowserInput
-    {
-    }
-
-#endif
 }
