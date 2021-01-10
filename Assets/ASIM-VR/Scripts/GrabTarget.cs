@@ -4,6 +4,9 @@
 [RequireComponent(typeof(Collider))]
 public class GrabTarget : MonoBehaviour
 {
+    [SerializeField]
+    private bool grabParent;
+
     private bool m_wasKinematic;
     private Transform m_parent;
 
@@ -13,7 +16,7 @@ public class GrabTarget : MonoBehaviour
         Collider = GetComponent<Collider>();
         IsValid = Rigidbody != null && Collider != null;
         m_wasKinematic = Rigidbody.isKinematic;
-        m_parent = transform.parent;
+        m_parent = Transform.parent;
     }
 
     public void StartGrab(Transform parent)
@@ -24,7 +27,7 @@ public class GrabTarget : MonoBehaviour
             //      Using Collider.bounds returns the global space bounds,
             //      which are affected by the objects rotation causing
             //      incorrect offset.
-            transform.parent = parent;
+            Transform.parent = parent;
             Collider.enabled = false;
             Rigidbody.isKinematic = true;
         }
@@ -36,7 +39,7 @@ public class GrabTarget : MonoBehaviour
         {
             Collider.enabled = true;
             Rigidbody.isKinematic = m_wasKinematic;
-            transform.parent = m_parent;
+            Transform.parent = m_parent;
         }
     }
 
@@ -46,10 +49,12 @@ public class GrabTarget : MonoBehaviour
         //TODO: Add Extents. See GrabTarget.StartGrab()
         //      Mathf.Max(m_target.Extents.z, 0.01f)
         //      hit.normal * Mathf.Max(m_target.Extents.z, 0.01f)
-        transform.position = contact.point + (contact.normal * 0.01f);
-        transform.rotation = Quaternion.LookRotation(-contact.normal, Vector3.up);
+        Transform.position = contact.point + (contact.normal * 0.01f);
+        Transform.rotation = Quaternion.LookRotation(-contact.normal, Vector3.up);
         Debug.Log("On Collision");
     }
+
+    public Transform Transform => grabParent ? transform.parent : transform;
 
     public Collider Collider { get; private set; }
     public Rigidbody Rigidbody { get; private set; }

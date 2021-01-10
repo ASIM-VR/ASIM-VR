@@ -77,10 +77,10 @@ public class GrabManager : MonoBehaviour
     {
         if(IsOwner(controller) && m_target != null)
         {
-            if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.transform.position) <= maxZoomDistance)
+            if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.Transform.position) <= maxZoomDistance)
             {
-                m_target.transform.rotation = interactor.attachTransform.rotation;
-                m_target.transform.position += m_target.transform.forward * grabZoomSpeed * Time.deltaTime;
+                m_target.Transform.rotation = interactor.attachTransform.rotation;
+                m_target.Transform.position += m_target.Transform.forward * grabZoomSpeed * Time.deltaTime;
             }
         }
     }
@@ -89,10 +89,10 @@ public class GrabManager : MonoBehaviour
     {
         if(IsOwner(controller) && m_target != null)
         {
-            if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.transform.position) >= minZoomDistance)
+            if(Vector3.Distance(interactor.attachTransform.transform.position, m_target.Transform.position) >= minZoomDistance)
             {
-                m_target.transform.rotation = interactor.attachTransform.rotation;
-                m_target.transform.position -= m_target.transform.forward * grabZoomSpeed * Time.deltaTime;
+                m_target.Transform.rotation = interactor.attachTransform.rotation;
+                m_target.Transform.position -= m_target.Transform.forward * grabZoomSpeed * Time.deltaTime;
             }
         }
     }
@@ -106,7 +106,7 @@ public class GrabManager : MonoBehaviour
                 m_target.StartGrab(transform);
                 if(m_style == GrabStyle.Grab)
                 {
-                    m_target.transform.localPosition = Vector3.zero;
+                    m_target.Transform.localPosition = Vector3.zero;
                 }
             }
         }
@@ -135,13 +135,13 @@ public class GrabManager : MonoBehaviour
             //Move to the current target position and offset from the surface based on the current normal.
             //TODO: Add Extents. See GrabTarget.StartGrab()
             //      hit.normal * Mathf.Max(m_target.Extents.z, 0.01f)
-            m_target.transform.position = hit.point + (hit.normal * 0.01f);
+            m_target.Transform.position = hit.point + (hit.normal * 0.01f);
             //Align with the current surface.
-            m_target.transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
+            m_target.Transform.rotation = Quaternion.LookRotation(-hit.normal, Vector3.up);
             return;
         }
-        m_target.transform.localPosition = Vector3.forward;
-        m_target.transform.rotation = interactor.transform.rotation;
+        m_target.Transform.localPosition = Vector3.forward;
+        m_target.Transform.rotation = interactor.transform.rotation;
     }
 
     private bool TryGetTarget(XRRayInteractor interactor, out GrabTarget target)
