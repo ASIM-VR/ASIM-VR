@@ -59,13 +59,12 @@ public class DistanceFromGround : Tool
         //Bottom of the screen. Where to line should begin and it ends the the ground
         startPosition = new Vector3(hit.transform.position.x, hit.transform.position.y - screenHeight / 2, hit.transform.position.z);
 
-        RaycastHit hit2;
-        if(Physics.Raycast(startPosition, transform.TransformDirection(Vector3.down), out hit2, Mathf.Infinity))
+        if(Physics.Raycast(startPosition, transform.TransformDirection(Vector3.down), out RaycastHit hit2, Mathf.Infinity))
         {
             ground = hit2.point;
             lineDrawer.DrawLine(startPosition, ground);
         }
 
-        InfoDisplay.Instance.SetText(hit.transform.gameObject.name + " is " + hit2.distance.ToString("F2") + " meters from the ground");
+        InfoDisplay.Instance.SetText($"{hit.transform.gameObject.name} is {hit2.distance.ToString("F2")} meters", "from the ground");
     }
 }

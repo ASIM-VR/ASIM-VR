@@ -1,3 +1,5 @@
+![ASIM-VR_banner_image](./Documents/img/banner.jpg)
+
 # ASIM-VR
 
 ## About
@@ -9,7 +11,10 @@ After importing Embedded Browser, import `Assets/ASIM-VR/Prefabs/Browser/Embedde
 ## How to use
 - Clone repository: `git clone https://github.com/ASIM-VR/ASIM-VR.git`
 - Open with Unity 2019.4.9f1
+- Import Embedded Browser
+- Import `Assets/ASIM-VR/Prefabs/Browser/EmbeddedBrowser_URP.unitypackage`
 - Drag the target device to the top of the list in `File/Project Settings/Player` under the `XR Settings` section
+- Depending on the active device you may need to modify the components in XR Rig
 
 ## Project Structure
 Project related files should be under `Assets/ASIM-VR` folder.  
