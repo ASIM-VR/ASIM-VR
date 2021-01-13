@@ -13,4 +13,5 @@ Tools are managed by [ToolManager](./tool_manager_documentation.md)
  - [Info Display](./info_display_documentation.md)
 
 ## Other
+ - [Grab Manage](./grab_manager.md)
  - [Mouse XR Controller](./mouse_xr_controller_documentation.md)
