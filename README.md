@@ -6,12 +6,15 @@
 
 Made with [Unity 2019.4.9f1](https://unity3d.com/unity/whats-new/2019.4.9) using [URP](https://unity.com/srp/universal-render-pipeline), [XR-Interaction toolkit](https://docs.unity3d.com/Packages/com.unity.xr.interaction.toolkit@0.9/manual/index.html) and [Embedded Browser](https://assetstore.unity.com/packages/tools/gui/embedded-browser-55459) (Embedded Browser is not Included).  
 
-After importing Embedded Browser, import `Assets/ASIM-VR/Prefabs/Browser/EmbeddedBrowser_URP.unitypackage` to replace and add content to EmbeddedBrowser
+[Demo Video](https://youtu.be/ttccAH9lsLM)  
+[Poster](./Documents/ASIM-VR_Poster.pdf)
+
 
 ## How to use
 - Clone repository: `git clone https://github.com/ASIM-VR/ASIM-VR.git`
 - Open with Unity 2019.4.9f1
 - Import Embedded Browser
+- Extract Embedded Browsers `DemoBrowserAssets.zip` to the root directory of the project
 - Import `Assets/ASIM-VR/Prefabs/Browser/EmbeddedBrowser_URP.unitypackage`
 - Drag the target device to the top of the list in `File/Project Settings/Player` under the `XR Settings` section
 - Depending on the active device you may need to modify the components in XR Rig
