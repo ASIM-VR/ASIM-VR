@@ -54,7 +54,9 @@ public class DisplayAdd : Tool
 
     private void SecondaryButtonClick(XRController controller, XRRayInteractor interactor)
     {
-        if(interactor.GetCurrentRaycastHit(out var hit) && hit.transform.parent.TryGetComponent(out VRBrowserPanel panel))
+        if(interactor.GetCurrentRaycastHit(out var hit) &&
+            hit.transform.parent != null &&
+            hit.transform.parent.TryGetComponent(out VRBrowserPanel panel))
         {
             SelectDisplay(panel);
         }
